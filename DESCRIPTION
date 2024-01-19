@@ -1,0 +1,22 @@
+Package: scenesetr
+Type: Package
+Title: Construct and Render Interactive 3-Dimensional Scenes
+Version: 1.0
+Date: 2023-11-22
+Description: Construct 3-dimensional scenes with elements of three types: light, camera and scene object. Render scenes from the perspective of a camera with real-time key inputs. Add custom element behaviours to define location, rotation and colour in response to key inputs and other elements.
+License: MIT + file LICENSE
+Imports: 
+    Rcpp (>= 1.0.11),
+    methods
+LinkingTo: Rcpp
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Encoding: UTF-8
+Authors@R: c(
+  person("Harry", "Thompson", email = "harry@mayesfield.uk", role = c("cre", "aut")),
+  person("Oliver", "Carter-Bones", role = "ctb"))
+Suggests: 
+    magrittr
+Depends: 
+    R (>= 2.10)
+LazyData: true
