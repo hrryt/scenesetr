@@ -8,6 +8,14 @@
 \description{
 Construct 3-dimensional scenes with elements of three types: light, camera and scene object. Render scenes from the perspective of a camera with real-time key inputs. Add custom element behaviours to define location, rotation and colour in response to key inputs and other elements.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/hrryt/scenesetr}
+  \item Report bugs at \url{https://github.com/hrryt/scenesetr/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Harry Thompson \email{harry@mayesfield.uk}
 

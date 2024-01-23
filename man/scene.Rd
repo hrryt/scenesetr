@@ -4,12 +4,14 @@
 \alias{scene}
 \title{Create a Scene}
 \usage{
-scene(...)
+scene(..., list = NULL)
 }
 \arguments{
 \item{...}{scene elements. Camera (object of class "scenesetr_camera") or
 light (object of class "scenesetr_light") or
 scene object (object of class "scenesetr_obj"). Passed to \code{\link[=list]{list()}}.}
+
+\item{list}{optional list of scene elements}
 }
 \value{
 Object of class ("scenesetr_scene").

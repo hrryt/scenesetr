@@ -11,6 +11,8 @@ animate custom 3-D scenes. scenesetr provides intuitive tools to define
 behaviours of lights, cameras and objects in response to key inputs and
 each other.
 
+For the moment, key input is only available on Windows.
+
 ## Installation
 
 You can install the development version of scenesetr from

@@ -7,7 +7,8 @@ Description: Construct 3-dimensional scenes with elements of three types: light,
 License: MIT + file LICENSE
 Imports: 
     Rcpp (>= 1.0.11),
-    methods
+    methods,
+    rlang
 LinkingTo: Rcpp
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

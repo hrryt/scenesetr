@@ -12,6 +12,8 @@
 #' `spin()` returns a behaviour function for the rotation of an element each frame 
 #' about the axis and by the angle specified.
 #' 
+#' A swarm of elements with the `boid` behaviour will act as a swarm of boids.
+#' 
 #' An element with the `excited` behaviour will wiggle vertically if a player 
 #' (any element with the `wasd` behaviour) is not looking at the object.
 #' 
@@ -37,8 +39,8 @@
 #' An element with the `jump` behaviour can jump vertically from a horizontal 
 #' floor defined by the initial location of the object when the ' ' key is held.
 #' 
-#' An element with the `wall_climb` behaviour can rotate clockwise and anti-
-#' clockwise on the press of keys '1' and '2' respectively.
+#' An element with the `tilt` behaviour can tilt down and up
+#' on the press of keys '1' and '2' respectively.
 #' 
 #' @param axis the axis or direction of rotation to be passed to the `axis` 
 #' argument of `rotate()`
@@ -64,6 +66,22 @@ spin <- function(axis, angle){
   function(element, ...){
     rotate(element, axis, angle)
   }
+}
+
+#' @rdname spin
+#' @export
+boid <- function(element, scene, ...){
+  initial(element$velocity) <- c(0,0,0)
+  boids <- scene[scene %behaves% boid]
+  velocity <- element$velocity +
+    0.01 * (rowMeans(sapply(boids, location)) - location(element)) +
+    0.15 * (rowMeans(sapply(boids, \(boid) boid$velocity %||% c(0,0,0))) - element$velocity) +
+    0.50 * rowMeans(location(element) - sapply(boids[sapply(boids, in_range, element, 10)], location))
+  velocity[location(element) > 200] <- -5
+  velocity[location(element) < -200] <- 5
+  element$velocity <- velocity
+  direction(element) <- velocity
+  move(element, velocity)
 }
 
 #' @rdname spin
@@ -179,11 +197,12 @@ jump <- function(element, keys, ...){
 
 #' @rdname spin
 #' @export
-wall_climb <- function(element, keys, last_keys, ...){
-  for(key in keys[!keys %in% last_keys]) switch(
-    key,
-    `1` = element <- rotate(element, "clockwise", 90),
-    `2` = element <- rotate(element, "clockwise", -90)
-  )
+tilt <- function(element, keys, last_keys, ...){
+  one_down <- any(keys == "1")
+  one_old <- any(last_keys == "1")
+  two_down <- any(keys == "2")
+  two_old <- any(last_keys == "2")
+  if((!one_down & one_old) | (two_down & !two_old)) return(rotate(element, "up", 45))
+  if((one_down & !one_old) | (!two_down & two_old)) return(rotate(element, "down", 45))
   element
 }

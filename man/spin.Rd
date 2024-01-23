@@ -2,6 +2,7 @@
 % Please edit documentation in R/behaviour_examples.R
 \name{spin}
 \alias{spin}
+\alias{boid}
 \alias{excited}
 \alias{pushable}
 \alias{bullet}
@@ -11,10 +12,12 @@
 \alias{follow}
 \alias{float_behind}
 \alias{jump}
-\alias{wall_climb}
+\alias{tilt}
 \title{Example Behaviours of Scene Elements}
 \usage{
 spin(axis, angle)
+
+boid(element, scene, ...)
 
 excited(element, scene, ...)
 
@@ -34,7 +37,7 @@ float_behind(element, scene, ...)
 
 jump(element, keys, ...)
 
-wall_climb(element, keys, last_keys, ...)
+tilt(element, keys, last_keys, ...)
 }
 \arguments{
 \item{axis}{the axis or direction of rotation to be passed to the \code{axis}
@@ -73,6 +76,8 @@ All of the functions in this topic except for \code{spin()} are behaviours.
 \code{spin()} returns a behaviour function for the rotation of an element each frame
 about the axis and by the angle specified.
 
+A swarm of elements with the \code{boid} behaviour will act as a swarm of boids.
+
 An element with the \code{excited} behaviour will wiggle vertically if a player
 (any element with the \code{wasd} behaviour) is not looking at the object.
 
@@ -98,6 +103,6 @@ with a delayed effect and the same rotation as the player.
 An element with the \code{jump} behaviour can jump vertically from a horizontal
 floor defined by the initial location of the object when the ' ' key is held.
 
-An element with the \code{wall_climb} behaviour can rotate clockwise and anti-
-clockwise on the press of keys '1' and '2' respectively.
+An element with the \code{tilt} behaviour can tilt down and up
+on the press of keys '1' and '2' respectively.
 }

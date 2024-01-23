@@ -2,8 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @useDynLib scenesetr, .registration = TRUE
-#' @importFrom Rcpp evalCpp
 #' @importFrom graphics par
 #' @importFrom graphics plot.new
 #' @importFrom graphics plot.window
@@ -14,6 +12,9 @@
 #' @importFrom grDevices rgb
 #' @importFrom grDevices X11
 #' @importFrom methods allNames
+#' @importFrom Rcpp evalCpp
+#' @importFrom rlang %||%
 #' @importFrom utils modifyList
+#' @useDynLib scenesetr, .registration = TRUE
 ## usethis namespace: end
 NULL

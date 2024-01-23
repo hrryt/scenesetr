@@ -48,6 +48,12 @@ paint.scenesetr_scene <- function(x, col){
   x
 }
 
+#' @export
+paint.scenesetr_camera <- function(x, col){
+  warning("camera returned unpainted")
+  x
+}
+
 format_col <- function(col){
   stopifnot("col must be one colour" = length(col) == 1)
   drop(col2rgb(col)) / 255
