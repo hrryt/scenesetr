@@ -34,3 +34,6 @@ coordinates derived from the rotation quaternion of an element.
 
 \code{direction(x) <- value} assigns the result of \code{\link{point}}\verb{(x, value)}.
 }
+\seealso{
+\code{\link[=point]{point()}}, \code{\link[=rotate]{rotate()}}, \code{\link[=rotation]{rotation()}}, \code{\link[=looked_at]{looked_at()}}, \code{\link[=skewer]{skewer()}}.
+}

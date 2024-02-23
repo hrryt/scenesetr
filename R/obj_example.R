@@ -17,6 +17,7 @@
 #' @returns Character vector of all file names in the "extdata" subdirectory of 
 #' the "scenesetr" package, or a character vector of full file names of queried 
 #' example object files in the "extdata" subdirectory.
+#' @seealso [read_obj()].
 #' @export
 
 obj_example <- function(path = NULL) {

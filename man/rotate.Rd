@@ -32,3 +32,6 @@ See \code{\link[=skewer]{skewer()}} with \code{to_rotate = TRUE}.
 
 If \code{x} is a scene, \code{rotate()} will be applied to every element in the scene.
 }
+\seealso{
+\code{\link[=point]{point()}}, \code{\link[=direction]{direction()}}, \code{\link[=rotation]{rotation()}}, \code{\link[=looked_at]{looked_at()}}.
+}

@@ -29,6 +29,7 @@
 #' @param rotate_to logical value indicating whether the element should be 
 #' rotated to its new direction from its current orientation.
 #' @returns Scene element or scene with updated rotation.
+#' @seealso [direction()], [rotate()], [rotation()], [looked_at()], [skewer()].
 #' @export
 
 point <- function(x, direction, rotate_to = FALSE) UseMethod("point")

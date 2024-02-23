@@ -20,6 +20,7 @@
 #' scene object (object of class "scenesetr_obj").
 #' @param angle numeric value in degrees
 #' @returns Logical value indicating whether the `lookee` is looked at by the `looker`.
+#' @seealso [in_range()], [behave()], [spin()].
 #' @export
 
 looked_at <- function(lookee, looker, angle = 15){

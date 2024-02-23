@@ -49,5 +49,7 @@ scene <- scene(cam)
 \dontrun{
 see(scene)
 }
-
+}
+\seealso{
+\code{\link[=behave]{behave()}}, \code{\link[=spin]{spin()}}.
 }

@@ -17,7 +17,7 @@
 #' @param scene scene (object of class "scenesetr_scene")
 #' @returns The scene as it was in the last frame before quitting the device, 
 #' invisibly.
-#' 
+#' @seealso [scene()], [read_obj()].
 #' @export
 
 see <- function(scene){
@@ -195,7 +195,7 @@ see <- function(scene){
       all_col[[o]] <- rgb(col, maxColorValue = 255)
     }
     
-    all_poly <- all_poly[, , , wsorder]
+    all_poly <- all_poly[, , , wsorder, drop = FALSE]
     all_x <- c(all_poly[, , 1, ])
     all_y <- c(all_poly[, , 2, ])
     all_col <- unlist(all_col[wsorder])

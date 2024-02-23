@@ -28,3 +28,6 @@ file name(s) of the example object file(s) provided.
 Calls \code{\link[base:system.file]{base::system.file()}} with the "extdata" subdirectory and "scenesetr"
 package.
 }
+\seealso{
+\code{\link[=read_obj]{read_obj()}}.
+}

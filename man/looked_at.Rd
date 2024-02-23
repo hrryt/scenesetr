@@ -32,3 +32,6 @@ Useful in defining behaviours on sight or interaction.
 
 If an element is unplaced, \code{looked_at()} will return \code{FALSE}.
 }
+\seealso{
+\code{\link[=in_range]{in_range()}}, \code{\link[=behave]{behave()}}, \code{\link[=spin]{spin()}}.
+}

@@ -11,7 +11,10 @@
 #' an object are read. All face indices are stored in the same matrix, with 
 #' normal indices of each face in the first row.
 #' 
-#' All returned scene objects are unpainted, unplaced, have no behaviours and 
+#' If no face normals or face normal indices are found, they will be added 
+#' by [add_normals].
+#' 
+#' All returned scene objects are painted white, unplaced, have no behaviours and 
 #' face the positive z direction.
 #' 
 #' @param file a connection object or a character string.
@@ -20,6 +23,7 @@
 #' @returns Scene object (object of class "scenesetr_obj") if `take_first` is
 #' `TRUE`, otherwise scene (object of class "scenesetr_scene") containing all 
 #' scene objects described in the file.
+#' @seealso [st_as_obj()], [scene()], [see()].
 #' @export
 
 read_obj <- function(file, take_first = TRUE){
@@ -31,25 +35,20 @@ read_obj <- function(file, take_first = TRUE){
   starts <- m[1, ] == "o"
   n_objects <- sum(starts)
   objects <- vector("list", n_objects)
+  
   starts <- which(starts)
+  ends <- c(tail(starts, -1), ncol(m))
   
-  for(i in seq_len(n_objects)){
-    start <- starts[i]
-    end <- starts[i + 1] - 1
-    if(is.na(end)) end <- ncol(m)
-    objects[[i]] <- m2obj(m[, (start + 1):end])
-    names(objects)[i] <- m[2, start]
-  }
+  objects <- .mapply(m2obj, list(starts + 1, ends), list(m))
+  names(objects) <- m[2, starts]
   
-  if(take_first){
-    objects <- objects[[1]]
-  } else {
-    class(objects) <- "scene"
-  }
+  if(take_first) objects <- objects[[1]] else class(objects) <- "scenesetr_scene"
   objects
 }
 
-m2obj <- function(m){
+m2obj <- function(start, end, m){
+  
+  m <- m[, start:end]
   
   pts <- m[-1, m[1, ] == "v"]
   mode(pts) <- "double"
@@ -63,7 +62,6 @@ m2obj <- function(m){
   
   n <- m[1, ] == "vn"
   has_normals <- any(n, na.rm = TRUE)
-  normals <- NULL
   if(has_normals){
     normals <- m[-1, n, drop = FALSE]
     mode(normals) <- "double"
@@ -73,6 +71,9 @@ m2obj <- function(m){
       colSums(is_na) != nrow(normals),
       drop = FALSE
     ]
+  } else {
+    warning("no normals found; calculating normals")
+    normals <- NA_real_
   }
   
   faces <- m[-1, m[1, ] == "f", drop = FALSE]
@@ -83,6 +84,7 @@ m2obj <- function(m){
     drop = FALSE
   ]
   if(any(grepl("/", faces))){
+    
     reg <- regexpr(".*?(?=/)", faces, perl = TRUE)
     replace <- as.numeric(regmatches(faces, reg))
     out <- rep(NA, length(reg))
@@ -97,48 +99,19 @@ m2obj <- function(m){
       out <- out - min(out, na.rm = TRUE) + 1
       faces <- rbind(out, faces)
     } else faces <- rbind(NA, faces)
+    
   } else {
+    
+    if(has_normals){
+      warning("normals found but no normal indices found; overwriting normals")
+      has_normals <- FALSE
+    }
     faces <- rbind(NA, faces)
+    
   }
   mode(faces) <- "integer"
   
-  new_obj(
-    pts = pts,
-    normals = normals,
-    faces = faces,
-    col = NA_real_,
-    place = NA_real_,
-    rotation = c(1,0,0,0),
-    behaviours = list()
-  )
-}
-
-new_obj <- function(
-    pts = double(),
-    normals = double(),
-    faces = integer(),
-    col = double(),
-    place = double(),
-    rotation = double(),
-    behaviours = list()){
-  stopifnot(
-    is.double(pts),
-    is.double(normals),
-    is.integer(faces),
-    is.double(col),
-    is.double(place),
-    is.double(rotation),
-    is.list(behaviours)
-  )
-  x <- list(
-    pts = pts,
-    normals = normals,
-    faces = faces,
-    col = col,
-    place = place,
-    rotation = rotation,
-    behaviours = behaviours
-  )
-  class(x) <- "scenesetr_obj"
-  x
+  out <- paint(obj(pts, normals, faces), "white")
+  if(!has_normals) return(add_normals(out))
+  out
 }

@@ -44,3 +44,6 @@ given is \code{c(0,0,0)}, the element is set to face the positive z direction.
 
 If \code{x} is a scene, \code{point()} will be applied to every element in the scene.
 }
+\seealso{
+\code{\link[=direction]{direction()}}, \code{\link[=rotate]{rotate()}}, \code{\link[=rotation]{rotation()}}, \code{\link[=looked_at]{looked_at()}}, \code{\link[=skewer]{skewer()}}.
+}

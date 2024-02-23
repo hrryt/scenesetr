@@ -29,3 +29,6 @@ An unplaced element will not be rendered by \code{\link[=see]{see()}}.
 
 If \code{x} is a scene, \code{place()} will be applied to every element in the scene.
 }
+\seealso{
+\code{\link[=move]{move()}}, \code{\link[=location]{location()}}.
+}

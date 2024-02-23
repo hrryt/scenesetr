@@ -25,6 +25,7 @@
 #' @inheritParams grDevices::col2rgb
 #' @inheritParams camera
 #' @returns Object of class "scenesetr_light".
+#' @seealso [camera()], [scene()].
 #' @export
 
 light <- function(

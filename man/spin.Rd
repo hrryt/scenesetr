@@ -106,3 +106,6 @@ floor defined by the initial location of the object when the ' ' key is held.
 An element with the \code{tilt} behaviour can tilt down and up
 on the press of keys '1' and '2' respectively.
 }
+\seealso{
+\code{\link[=behave]{behave()}}, \code{\link[=behaves]{behaves()}}.
+}

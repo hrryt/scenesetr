@@ -51,5 +51,7 @@ restarting_scene <- scene(restarting_cam)
 # Remember that pressing "Q" quits the device
 see(restarting_scene)
 }
-
+}
+\seealso{
+\code{\link[=behave]{behave()}}, \code{\link[=spin]{spin()}}.
 }

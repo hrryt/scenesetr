@@ -40,3 +40,6 @@ Useful in copying rotation between elements:
 
 If \code{anyNA(value)}, the updated scene element has no rotation.
 }
+\seealso{
+\code{\link[=point]{point()}}, \code{\link[=rotate]{rotate()}}, \code{\link[=direction]{direction()}}, \code{\link[=looked_at]{looked_at()}}, \code{\link[=skewer]{skewer()}}.
+}

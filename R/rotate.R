@@ -17,6 +17,7 @@
 #' 3-D (x,y,z) coordinates or one of `c(up, down, left, right, clockwise)`.
 #' @param angle numeric value in degrees
 #' @returns Scene element or scene with updated rotation.
+#' @seealso [point()], [direction()], [rotation()], [looked_at()].
 #' @export
 
 rotate <- function(x, axis, angle) UseMethod("rotate")

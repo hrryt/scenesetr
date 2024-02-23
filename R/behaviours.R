@@ -47,6 +47,7 @@
 #' value from the left-hand side.)
 #' 
 #' For `behaves(x, ...)`, an element with modified behaviours.
+#' @seealso [behaves()], [spin()].
 #' @export
 
 behaviours <- function(x){

@@ -3,8 +3,8 @@
 #' Create an object of class "scenesetr_scene" containing scene elements.
 #' 
 #' @details
-#' A scene is a list of scene elements and can be subset as such with 
-#' `[`, `[[` and `$`. A scene may have names.
+#' A scene is a list of scene elements, so can be subset with 
+#' `[`, `[[` and `$` and combined with `c()`. A scene may have names.
 #' 
 #' A scene with lights, scene objects and a camera can be visualised with [see()].  
 #' 
@@ -13,6 +13,7 @@
 #' scene object (object of class "scenesetr_obj"). Passed to [list()].
 #' @param list optional list of scene elements
 #' @returns Object of class ("scenesetr_scene").
+#' @seealso [camera()], [light()], [see()].
 #' @export
 
 scene <- function(..., list = NULL){

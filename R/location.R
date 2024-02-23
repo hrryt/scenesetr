@@ -15,6 +15,7 @@
 #' For `location(x) <- value`, the updated scene element. (Note that the value of 
 #' `location(x) <- value` is that of the assignment, `value`, not the return 
 #' value from the left-hand side.)
+#' @seealso [place()], [move()], [looked_at()], [in_range()].
 #' @export
 
 location <- function(x){

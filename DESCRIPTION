@@ -8,7 +8,8 @@ License: MIT + file LICENSE
 Imports: 
     Rcpp (>= 1.0.11),
     methods,
-    rlang
+    rlang,
+    utils
 LinkingTo: Rcpp
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
@@ -17,7 +18,9 @@ Authors@R: c(
   person("Harry", "Thompson", email = "harry@mayesfield.uk", role = c("cre", "aut")),
   person("Oliver", "Carter-Bones", role = "ctb"))
 Suggests: 
-    magrittr
+    magrittr,
+    sf,
+    stars
 Depends: 
     R (>= 2.10)
 LazyData: true

@@ -38,7 +38,7 @@
 #' \dontrun{
 #' see(scene)
 #' }
-#' 
+#' @seealso [behave()], [spin()].
 #' @export
 
 `initial<-` <- function(x, value){

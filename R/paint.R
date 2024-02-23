@@ -9,7 +9,8 @@
 #' Additionally, two colours can be given when painting a scene object, upon 
 #' which a gradient between the two colours is applied to the object based on 
 #' the degree to which each polygon faces the horizontal axis orthogonal to 
-#' its direction.
+#' the direction the scene object faces. This gradient is a linear interpolation 
+#' in the RGB colourspace.
 #' 
 #' A scene object must be painted to be rendered by [see()].
 #' 

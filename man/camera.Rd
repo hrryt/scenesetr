@@ -37,3 +37,6 @@ with no behaviour.
 Default arguments return a camera at the origin facing the positive
 z direction, with a sixty degree field of view and 1:1 aspect ratio.
 }
+\seealso{
+\code{\link[=fov]{fov()}}, \code{\link[=aspect]{aspect()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=see]{see()}}.
+}

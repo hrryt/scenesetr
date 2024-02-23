@@ -57,7 +57,7 @@
 #' 
 #' For every other function, the modified scene element, to be modified 
 #' by further behaviours or rendered in a given frame.
-#' 
+#' @seealso [behave()], [behaves()].
 #' @export
 
 spin <- function(axis, angle){

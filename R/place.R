@@ -15,6 +15,7 @@
 #' @param where numeric vector or an R object containing `NA`. 
 #' 3-D (x,y,z) coordinates.
 #' @returns Scene element or scene with updated location.
+#' @seealso [move()], [location()].
 #' @export
 
 place <- function(x, where) UseMethod("place")

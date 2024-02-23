@@ -18,6 +18,7 @@
 #' "scenesetr_obj") or scene (object of class "scenesetr_scene").
 #' @param behaviour character variable or variable name
 #' @returns Boolean indicating whether the scene element has the behaviour.
+#' @seealso [behave()], [spin()].
 #' @export
 
 behaves <- function(x, behaviour){

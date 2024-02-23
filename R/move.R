@@ -18,6 +18,7 @@
 #' @param translation numeric vector or an R object containing `NA`. 
 #' 3-D (x,y,z) coordinates.
 #' @returns Scene element or scene with updated location.
+#' @seealso [place()], [location()].
 #' @export
 
 move <- function(x, translation) UseMethod("move")

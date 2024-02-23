@@ -38,7 +38,7 @@
 #' # Remember that pressing "Q" quits the device
 #' see(restarting_scene)
 #' }
-#' 
+#' @seealso [behave()], [spin()].
 #' @export
 
 game_over <- function(...){

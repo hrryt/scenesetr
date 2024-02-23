@@ -16,6 +16,7 @@
 #' @param fov numeric value. Field of view in degrees.
 #' @param aspect numeric value. Aspect ratio.
 #' @returns Object of class "scenesetr_camera".
+#' @seealso [fov()], [aspect()], [light()], [scene()], [see()].
 #' @export
 
 camera <- function(

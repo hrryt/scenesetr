@@ -16,6 +16,7 @@
 #' scene object (object of class "scenesetr_obj").
 #' @param range numeric distance value
 #' @returns Logical value indicating whether the elements are in range.
+#' @seealso [looked_at()], [behave()], [spin()].
 #' @export
 
 in_range <- function(x, y, range){

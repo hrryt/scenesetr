@@ -45,3 +45,6 @@ as a point light, but only acting on a cone in the direction specified.
 
 \code{direction} will be normalised to a 3-D vector of unit length.
 }
+\seealso{
+\code{\link[=camera]{camera()}}, \code{\link[=scene]{scene()}}.
+}

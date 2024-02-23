@@ -28,3 +28,6 @@ or no scene objects will appear blank.
 Although key inputs can be used in the behaviours of scene elements, "R" and
 "Q" are reserved for resetting the scene and quitting the device respectively.
 }
+\seealso{
+\code{\link[=scene]{scene()}}, \code{\link[=read_obj]{read_obj()}}.
+}

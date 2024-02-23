@@ -29,6 +29,12 @@ The vertices, face normals, face normal indices and face vertex indices of
 an object are read. All face indices are stored in the same matrix, with
 normal indices of each face in the first row.
 
-All returned scene objects are unpainted, unplaced, have no behaviours and
+If no face normals or face normal indices are found, they will be added
+by \link{add_normals}.
+
+All returned scene objects are painted white, unplaced, have no behaviours and
 face the positive z direction.
+}
+\seealso{
+\code{\link[=st_as_obj]{st_as_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=see]{see()}}.
 }

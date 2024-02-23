@@ -65,3 +65,6 @@ is then rendered if the behaviour is the last in the named list, or is passed
 to the next behaviour in the list as the \code{element} argument.
 }
 }
+\seealso{
+\code{\link[=behaves]{behaves()}}, \code{\link[=spin]{spin()}}.
+}

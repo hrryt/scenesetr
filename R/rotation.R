@@ -24,6 +24,7 @@
 #' For `rotation(x) <- value`, the updated scene element. (Note that the value of 
 #' `rotation(x) <- value` is that of the assignment, `value`, not the return 
 #' value from the left-hand side.)
+#' @seealso [point()], [rotate()], [direction()], [looked_at()], [skewer()].
 #' @export
 
 rotation <- function(x){

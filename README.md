@@ -11,6 +11,8 @@ animate custom 3-D scenes. scenesetr provides intuitive tools to define
 behaviours of lights, cameras and objects in response to key inputs and
 each other.
 
+Scene objects can be read from .obj files or `stars` raster objects.
+
 For the moment, key input is only available on Windows.
 
 ## Installation
@@ -22,3 +24,10 @@ You can install the development version of scenesetr from
 # install.packages("devtools")
 devtools::install_github("hrryt/scenesetr")
 ```
+
+<figure>
+<img src="man/figures/README-three.gif"
+alt="Three rotating 3-D objects. From left to right: moai, moai, cat." />
+<figcaption aria-hidden="true">Three rotating 3-D objects. From left to
+right: moai, moai, cat.</figcaption>
+</figure>

@@ -28,3 +28,6 @@ Useful in defining collision behaviours.
 
 If an element is unplaced, \code{in_range()} will return \code{FALSE}.
 }
+\seealso{
+\code{\link[=looked_at]{looked_at()}}, \code{\link[=behave]{behave()}}, \code{\link[=spin]{spin()}}.
+}

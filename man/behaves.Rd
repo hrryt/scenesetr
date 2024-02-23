@@ -33,3 +33,6 @@ scene element.
 The boolean vector output of \code{behaves()} when called on a scene can be used
 to subset a scene.
 }
+\seealso{
+\code{\link[=behave]{behave()}}, \code{\link[=spin]{spin()}}.
+}

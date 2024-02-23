@@ -31,3 +31,6 @@ Functions to get and set the location of a scene element.
 
 \code{location(x) <- value} assigns the result of \code{\link{place}}\verb{(x, value)}.
 }
+\seealso{
+\code{\link[=place]{place()}}, \code{\link[=move]{move()}}, \code{\link[=looked_at]{looked_at()}}, \code{\link[=in_range]{in_range()}}.
+}

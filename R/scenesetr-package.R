@@ -14,7 +14,9 @@
 #' @importFrom methods allNames
 #' @importFrom Rcpp evalCpp
 #' @importFrom rlang %||%
+#' @importFrom rlang check_installed
 #' @importFrom utils modifyList
+#' @importFrom utils tail
 #' @useDynLib scenesetr, .registration = TRUE
 ## usethis namespace: end
 NULL
