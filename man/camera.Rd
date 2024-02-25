@@ -28,14 +28,14 @@ Object of class "scenesetr_camera".
 }
 \description{
 Create an object of class "scenesetr_camera". Calling \code{\link[=see]{see()}} on a scene with
-a camera allows the user to view the scene from the viewpoint of the camera
-with no behaviour.
+a camera allows the user to view the scene from the viewpoint of the camera.
 }
 \details{
 \code{direction} will be normalised to a 3-D vector of unit length.
 
 Default arguments return a camera at the origin facing the positive
-z direction, with a sixty degree field of view and 1:1 aspect ratio.
+z direction, with a sixty degree field of view, 1:1 aspect ratio and no
+behaviour.
 }
 \seealso{
 \code{\link[=fov]{fov()}}, \code{\link[=aspect]{aspect()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=see]{see()}}.

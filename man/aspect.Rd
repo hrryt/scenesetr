@@ -34,4 +34,7 @@ By default, \code{\link[=camera]{camera()}} generates a camera with an aspect ra
 The aspect ratio of a camera in a scene is used by \code{\link[=see]{see()}} in setting
 the height of the \code{\link[grDevices:x11]{grDevices::X11()}} graphics device to seven inches divided by
 the aspect ratio.
+
+Using a behaviour to change the aspect ratio of a camera will not change the
+height of the graphics device until \code{\link[=see]{see()}} is called again on the scene.
 }

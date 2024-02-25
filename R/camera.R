@@ -1,14 +1,14 @@
 #' Create a Camera
 #' 
 #' Create an object of class "scenesetr_camera". Calling [see()] on a scene with 
-#' a camera allows the user to view the scene from the viewpoint of the camera 
-#' with no behaviour.
+#' a camera allows the user to view the scene from the viewpoint of the camera.
 #' 
 #' @details
 #' `direction` will be normalised to a 3-D vector of unit length.
 #' 
 #' Default arguments return a camera at the origin facing the positive 
-#' z direction, with a sixty degree field of view and 1:1 aspect ratio.
+#' z direction, with a sixty degree field of view, 1:1 aspect ratio and no 
+#' behaviour.
 #' 
 #' @param place numeric vector. 3-D (x,y,z) coordinates
 #' @param direction numeric vector. 3-D (x,y,z) coordinates
@@ -62,7 +62,7 @@ validate_camera <- function(x){
     "`x` must have one `rotation` of length 4" = length(x$rotation) == 4,
     "The `rotation` of `x` must be a normalised quaternion or NA" = sum(x$rotation^2) == 1 || anyNA(x$rotation),
     "`x` `behaviours` must be a list of functions" = all(sapply(x$behaviours, is.function)),
-    "`x` `behaviours` must be a named list" = all(allNames(x$behaviours) != ""),
+    "`x` `behaviours` must be a named list" = !any(unnamed(x$behaviours)),
     "`fov` of `x` must be length 1" = length(x$fov) == 1,
     "`aspect` of `x` must be length 1" = length(x$aspect) == 1
   )

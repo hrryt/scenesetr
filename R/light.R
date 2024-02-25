@@ -68,7 +68,7 @@ validate_light <- function(x){
     "`x` must have one `rotation` of length 4 or NA" = length(x$rotation) == 4 || anyNA(x$rotation),
     "The `rotation` of `x` must be a normalised quaternion or NA" = sum(x$rotation^2) == 1 || anyNA(x$rotation),
     "`x` `behaviours` must be a list of functions" = all(sapply(x$behaviours, is.function)),
-    "`x` `behaviours` must be a named list" = all(allNames(x$behaviours) != "")
+    "`x` `behaviours` must be a named list" = !any(unnamed(x$behaviours))
   )
   x
 }

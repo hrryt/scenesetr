@@ -65,9 +65,11 @@ behaviours <- function(x){
 #' @export
 behave <- function(x, ...){
   behaviours <- list(...)
-  unnamed <- allNames(behaviours) == ""
+  unnamed <- unnamed(behaviours)
   names(behaviours)[unnamed] <- as.character(match.call()[-c(1,2)][unnamed])
   x$behaviours <- modifyList(x$behaviours, behaviours)
-  x$behaviours[allNames(x$behaviours) == ""] <- NULL
+  x$behaviours[unnamed(x$behaviours)] <- NULL
   x
 }
+
+unnamed <- function(x) !nzchar(names(x) %||% character(length(x)))

@@ -20,7 +20,9 @@ knitr::opts_chunk$set(
 
 The goal of scenesetr is to allow R users to interactively explore and animate 
 custom 3-D scenes. scenesetr provides intuitive tools to define behaviours of 
-lights, cameras and objects in response to key inputs and each other.
+lights, cameras and objects in response to key inputs and each other, and to 
+record scenes as they pan out in real time. Recorded scenes can be replayed 
+to a separate device such as `png()`.
 
 Scene objects can be read from .obj files or `stars` raster objects.
 

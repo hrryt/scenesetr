@@ -4,14 +4,24 @@
 \alias{see}
 \title{Interactive 3-D Render of a Scene}
 \usage{
-see(scene)
+see(scene, device = grDevices::X11, width = 7, ...)
 }
 \arguments{
 \item{scene}{scene (object of class "scenesetr_scene")}
+
+\item{device}{function. Graphics device to be used.}
+
+\item{width}{passed to device function}
+
+\item{...}{passed to device function}
 }
 \value{
-The scene as it was in the last frame before quitting the device,
-invisibly.
+Object of class "scenesetr_recording", invisibly. List of three elements:
+\itemize{
+\item \code{initial_scene}: the original scene passed to \code{see()},
+\item \code{final_scene}: the scene as it was in the last frame before quitting the device,
+\item \code{key_inputs}: a list of key inputs, with one element per frame recorded.
+}
 }
 \description{
 View a scene from the perspective of a camera. Watch behaviours play out
@@ -19,8 +29,7 @@ frame by frame with real-time key inputs from the user.
 }
 \details{
 Only available on windows due to the method of obtaining key inputs. This
-may change in the future. The use of the \code{\link[grDevices:x11]{grDevices::X11()}} device imposes
-additional platform restrictions.
+may change in the future.
 
 A scene must have a camera for \code{see()} to function. A scene with no lights
 or no scene objects will appear blank.
@@ -29,5 +38,5 @@ Although key inputs can be used in the behaviours of scene elements, "R" and
 "Q" are reserved for resetting the scene and quitting the device respectively.
 }
 \seealso{
-\code{\link[=scene]{scene()}}, \code{\link[=read_obj]{read_obj()}}.
+\code{\link[=scene]{scene()}}, \code{\link[=read_obj]{read_obj()}}, \code{\link[=replay]{replay()}}.
 }

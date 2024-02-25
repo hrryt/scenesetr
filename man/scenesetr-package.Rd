@@ -6,7 +6,7 @@
 \alias{scenesetr-package}
 \title{scenesetr: Construct and Render Interactive 3-Dimensional Scenes}
 \description{
-Construct 3-dimensional scenes with elements of three types: light, camera and scene object. Render scenes from the perspective of a camera with real-time key inputs. Add custom element behaviours to define location, rotation and colour in response to key inputs and other elements.
+Construct 3-dimensional scenes with elements of three types: lights, cameras and scene objects. Render scenes from the perspective of a camera with real-time key inputs. Add custom element behaviours to define location, rotation, colour and more in response to key inputs and other elements. Record scenes as they pan out in an interactive window then replay to a separate device. Add scene objects from "stars" rasters or .obj files.
 }
 \seealso{
 Useful links:
