@@ -25,7 +25,7 @@ If \code{anyNA(where)}, the scene element will be unplaced. Otherwise,
 \code{where} must be a numeric vector of length three specifying the
 new location of the element in 3-D coordinates (x,y,z).
 
-An unplaced element will not be rendered by \code{\link[=see]{see()}}.
+An unplaced element will not be rendered by \code{\link[=record]{record()}}.
 
 If \code{x} is a scene, \code{place()} will be applied to every element in the scene.
 }

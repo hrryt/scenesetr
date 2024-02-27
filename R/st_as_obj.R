@@ -20,7 +20,7 @@
 #' 
 #' @param x stars raster object
 #' @returns Scene object (object of class "scenesetr_obj").
-#' @seealso [read_obj()], [scene()], [see()].
+#' @seealso [read_obj()], [scene()], [record()].
 #' @export
 st_as_obj <- function(x) UseMethod("st_as_obj")
 

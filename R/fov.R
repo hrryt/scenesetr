@@ -9,7 +9,7 @@
 #' 
 #' By default, [camera()] generates a camera with a sixty degree field of view.
 #' 
-#' The field of view of a camera in a scene is used by [see()] in configuring 
+#' The field of view of a camera in a scene is used by [record()] in configuring 
 #' the perspective of the rendered frames from the viewpoint of the camera.
 #' 
 #' @inheritParams aspect

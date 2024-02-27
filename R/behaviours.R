@@ -4,7 +4,7 @@
 #' 
 #' @details
 #' The behaviours of an element are a named list of functions describing how 
-#' an element is modified every frame when [see()] is called on a scene 
+#' an element is modified every frame when [record()] is called on a scene 
 #' containing the element. Behaviours are applied to an element each frame 
 #' in the order in which they appear in the named list.
 #' 
@@ -28,7 +28,7 @@
 #' behaviour is applied. `scene` is the entire scene as it was the previous frame. 
 #' `keys` is a character vector of the keys held during 
 #' the current frame. `last_keys` is a character vector of the keys held during 
-#' the previous frame.
+#' the previous frame. `frame` is the frame number of the current frame.
 #' 
 #' * The function must return the modified scene element. The returned element 
 #' is then rendered if the behaviour is the last in the named list, or is passed 

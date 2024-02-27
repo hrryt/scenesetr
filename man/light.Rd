@@ -24,7 +24,7 @@ Object of class "scenesetr_light".
 }
 \description{
 Create an object of class "scenesetr_light". A light illuminates a scene to
-be seen from the viewpoint of a camera when \code{\link[=see]{see()}} is called on the scene.
+be seen from the viewpoint of a camera when \code{\link[=record]{record()}} is called on the scene.
 }
 \details{
 There are four categories of light. Ambient light, directional light, point

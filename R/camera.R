@@ -1,6 +1,6 @@
 #' Create a Camera
 #' 
-#' Create an object of class "scenesetr_camera". Calling [see()] on a scene with 
+#' Create an object of class "scenesetr_camera". Calling [record()] on a scene with 
 #' a camera allows the user to view the scene from the viewpoint of the camera.
 #' 
 #' @details
@@ -16,7 +16,7 @@
 #' @param fov numeric value. Field of view in degrees.
 #' @param aspect numeric value. Aspect ratio.
 #' @returns Object of class "scenesetr_camera".
-#' @seealso [fov()], [aspect()], [light()], [scene()], [see()].
+#' @seealso [fov()], [aspect()], [light()], [scene()], [record()].
 #' @export
 
 camera <- function(

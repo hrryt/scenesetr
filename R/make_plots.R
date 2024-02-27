@@ -36,26 +36,34 @@ make_plots <- function(scene, interactive, key_inputs, device, width, ...){
   ))
   wsscene <- scene
   flag <- TRUE
-  game_over <- FALSE
+  quit_device <- FALSE
   restart <- FALSE
   action_flag <- FALSE
   keys <- NULL
-  frame <- 1
+  frame <- 0
   
+  height <- width * asp
   if(interactive) GetKeyboard()
-  device(width = width, height = width * asp, ...)
+  if(identical(device, grDevices::dev.new))
+    device(width = width, height = height, noRStudioGD = TRUE, ...) else
+      device(width = width, height = width * asp, ...)
   par(mar = c(0,0,0,0), bg = 1)
   previous_time <- Sys.time()
   
   while(flag){
     
+    # frame limit
+    current_time <- Sys.time()
+    while(current_time - previous_time <= 1/60) current_time <- Sys.time()
+    previous_time <- current_time
+    
     # key events
+    frame <- frame + 1
     last_keys <- keys
     if(interactive){
       keys <- translate(GetKeyboard())
       key_inputs[[frame]] <- keys
     } else keys <- key_inputs[[frame]]
-    frame <- frame + 1
     for(key in keys) switch(key, R = wsscene <- scene, Q = flag <- FALSE)
     
     # apply behaviours
@@ -67,18 +75,19 @@ make_plots <- function(scene, interactive, key_inputs, device, width, ...){
           element = wselement,
           scene = wsscene,
           keys = keys,
-          last_keys = last_keys
+          last_keys = last_keys,
+          frame = frame
         )
-        game_over <- identical(wselement, 0)
+        quit_device <- identical(wselement, 0)
         restart <- identical(wselement, 1)
-        action_flag <- game_over || restart
+        action_flag <- quit_device || restart
         if(action_flag) break
       }
       if(action_flag) break
       wsscene[[e]] <- wselement
       wsplaces[, which_object[e]] <- wselement$place
     }
-    if(game_over) break
+    if(quit_device) break
     if(restart) wsscene <- scene
     if(no_objects){
       plot.new()
@@ -171,10 +180,6 @@ make_plots <- function(scene, interactive, key_inputs, device, width, ...){
     plot.new()
     plot.window(xlim = xylim, ylim = xylim)
     polygon(all_x, all_y, col = all_col, border = NA)
-    
-    current_time <- Sys.time()
-    while(current_time - previous_time <= 1/60) current_time <- Sys.time()
-    previous_time <- current_time
   }
   
   dev.off()

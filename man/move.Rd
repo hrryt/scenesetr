@@ -28,7 +28,7 @@ in location along each of the basis axes (x,y,z).
 If the scene element is already unplaced, \code{move()} will return the
 element unmodified.
 
-An unplaced element will not be rendered by \code{\link[=see]{see()}}.
+An unplaced element will not be rendered by \code{\link[=record]{record()}}.
 
 If \code{x} is a scene, \code{move()} will be applied to every element in the scene.
 }

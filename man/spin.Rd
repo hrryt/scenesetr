@@ -15,7 +15,7 @@
 \alias{tilt}
 \title{Example Behaviours of Scene Elements}
 \usage{
-spin(axis, angle)
+spin(axis, angle, quit_after_cycle = FALSE)
 
 boid(element, scene, ...)
 
@@ -45,6 +45,9 @@ argument of \code{rotate()}}
 
 \item{angle}{the angle of rotation each frame to be passed to the \code{angle}
 argument of \code{rotate()}}
+
+\item{quit_after_cycle}{logical value indicating if the device should be
+quit once one full rotation of the element is completed}
 
 \item{element}{a scene element with the defined behaviour, to be modified by
 the behaviour each frame}

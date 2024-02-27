@@ -35,7 +35,7 @@ Functions to get or set the behaviours of a scene element.
 }
 \details{
 The behaviours of an element are a named list of functions describing how
-an element is modified every frame when \code{\link[=see]{see()}} is called on a scene
+an element is modified every frame when \code{\link[=record]{record()}} is called on a scene
 containing the element. Behaviours are applied to an element each frame
 in the order in which they appear in the named list.
 
@@ -59,7 +59,7 @@ optional parameters. \code{element} is the scene element immediately before the
 behaviour is applied. \code{scene} is the entire scene as it was the previous frame.
 \code{keys} is a character vector of the keys held during
 the current frame. \code{last_keys} is a character vector of the keys held during
-the previous frame.
+the previous frame. \code{frame} is the frame number of the current frame.
 \item The function must return the modified scene element. The returned element
 is then rendered if the behaviour is the last in the named list, or is passed
 to the next behaviour in the list as the \code{element} argument.

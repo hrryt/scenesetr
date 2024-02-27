@@ -1,8 +1,8 @@
 lookup <- matrix(ncol = 2, c(
   "%", "&", "(", "'", "\001", "\004",
-  "\020", "\xa0", "\021", "\xa2",
+  "\020", "\xa0", "\021", "\xa2", "\xff",
   "left", "up", "down", "right", "left_click", "middle_click",
-  "shift", "", "ctrl", ""
+  "shift", "", "ctrl", "", ""
 ))
 
 translate <- function(keys){

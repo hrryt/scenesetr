@@ -10,7 +10,7 @@
 #' If the scene element is already unplaced, `move()` will return the 
 #' element unmodified.
 #' 
-#' An unplaced element will not be rendered by [see()].
+#' An unplaced element will not be rendered by [record()].
 #' 
 #' If `x` is a scene, `move()` will be applied to every element in the scene.
 #' 

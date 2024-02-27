@@ -31,6 +31,6 @@ Functions to get or set the field of view of a camera.
 
 By default, \code{\link[=camera]{camera()}} generates a camera with a sixty degree field of view.
 
-The field of view of a camera in a scene is used by \code{\link[=see]{see()}} in configuring
+The field of view of a camera in a scene is used by \code{\link[=record]{record()}} in configuring
 the perspective of the rendered frames from the viewpoint of the camera.
 }

@@ -46,6 +46,8 @@
 #' argument of `rotate()`
 #' @param angle the angle of rotation each frame to be passed to the `angle` 
 #' argument of `rotate()`
+#' @param quit_after_cycle logical value indicating if the device should be 
+#' quit once one full rotation of the element is completed
 #' @param element a scene element with the defined behaviour, to be modified by 
 #' the behaviour each frame
 #' @param scene the entire scene as it was the previous frame
@@ -60,10 +62,12 @@
 #' @seealso [behave()], [behaves()].
 #' @export
 
-spin <- function(axis, angle){
-  force(angle)
+spin <- function(axis, angle, quit_after_cycle = FALSE){
   force(axis)
-  function(element, ...){
+  force(angle)
+  if(quit_after_cycle) stop_frame <- 360 / angle
+  function(element, frame, ...){
+    if(quit_after_cycle && frame == stop_frame) return(quit_device("Cycle completed\n"))
     rotate(element, axis, angle)
   }
 }
@@ -73,12 +77,16 @@ spin <- function(axis, angle){
 boid <- function(element, scene, ...){
   initial(element$velocity) <- c(0,0,0)
   boids <- scene[scene %behaves% boid]
+  location_element <- location(element)
+  locations <- sapply(boids, location)
+  velocities <- sapply(boids, \(boid) boid$velocity %||% c(0,0,0))
+  close <- sapply(boids, in_range, element, 10)
   velocity <- element$velocity +
-    0.01 * (rowMeans(sapply(boids, location)) - location(element)) +
-    0.15 * (rowMeans(sapply(boids, \(boid) boid$velocity %||% c(0,0,0))) - element$velocity) +
-    0.50 * rowMeans(location(element) - sapply(boids[sapply(boids, in_range, element, 10)], location))
-  velocity[location(element) > 200] <- -5
-  velocity[location(element) < -200] <- 5
+    0.01 * (rowMeans(locations) - location_element) +
+    0.15 * (rowMeans(velocities) - element$velocity) +
+    0.50 * (location_element - rowMeans(locations[, close, drop = FALSE]))
+  velocity[location_element > 200] <- -5
+  velocity[location_element < -200] <- 5
   element$velocity <- velocity
   direction(element) <- velocity
   move(element, velocity)

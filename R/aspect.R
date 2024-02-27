@@ -9,12 +9,11 @@
 #' 
 #' By default, [camera()] generates a camera with an aspect ratio of 1.
 #' 
-#' The aspect ratio of a camera in a scene is used by [see()] in setting 
-#' the height of the [grDevices::X11()] graphics device to seven inches divided by 
-#' the aspect ratio.
+#' The aspect ratio of a camera in a scene is used by [record()] in setting 
+#' the height of the graphics device to its width divided by the aspect ratio.
 #' 
 #' Using a behaviour to change the aspect ratio of a camera will not change the 
-#' height of the graphics device until [see()] is called again on the scene.
+#' height of the graphics device until [record()] is called again on the scene.
 #' 
 #' @param x camera (object of class "scenesetr_camera")
 #' @param value numeric replacement value

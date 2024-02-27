@@ -36,5 +36,5 @@ All returned scene objects are painted white, unplaced, have no behaviours and
 face the positive z direction.
 }
 \seealso{
-\code{\link[=st_as_obj]{st_as_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=see]{see()}}.
+\code{\link[=st_as_obj]{st_as_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
 }

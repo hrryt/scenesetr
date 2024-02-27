@@ -11,10 +11,8 @@
 #' the degree to which each polygon faces the horizontal axis orthogonal to 
 #' the direction the scene object faces. This gradient is a linear interpolation 
 #' in the RGB colourspace.
-#' 
-#' A scene object must be painted to be rendered by [see()].
-#' 
-#' By default, [light()] creates a white light.
+#' By default, [light()] creates a white light, and [read_obj()] and [st_as_obj()] 
+#' paint the scene objects they return white.
 #' 
 #' If `x` is a scene, `paint()` will be applied to every element in the scene.
 #' 

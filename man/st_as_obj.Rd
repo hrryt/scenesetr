@@ -32,5 +32,5 @@ The returned scene object is painted white, unplaced, has no behaviours and
 faces the positive z direction.
 }
 \seealso{
-\code{\link[=read_obj]{read_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=see]{see()}}.
+\code{\link[=read_obj]{read_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
 }

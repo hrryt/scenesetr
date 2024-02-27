@@ -27,7 +27,7 @@ camera(
 Object of class "scenesetr_camera".
 }
 \description{
-Create an object of class "scenesetr_camera". Calling \code{\link[=see]{see()}} on a scene with
+Create an object of class "scenesetr_camera". Calling \code{\link[=record]{record()}} on a scene with
 a camera allows the user to view the scene from the viewpoint of the camera.
 }
 \details{
@@ -38,5 +38,5 @@ z direction, with a sixty degree field of view, 1:1 aspect ratio and no
 behaviour.
 }
 \seealso{
-\code{\link[=fov]{fov()}}, \code{\link[=aspect]{aspect()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=see]{see()}}.
+\code{\link[=fov]{fov()}}, \code{\link[=aspect]{aspect()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
 }

@@ -23,7 +23,7 @@
 #' @returns Scene object (object of class "scenesetr_obj") if `take_first` is
 #' `TRUE`, otherwise scene (object of class "scenesetr_scene") containing all 
 #' scene objects described in the file.
-#' @seealso [st_as_obj()], [scene()], [see()].
+#' @seealso [st_as_obj()], [scene()], [record()].
 #' @export
 
 read_obj <- function(file, take_first = TRUE){

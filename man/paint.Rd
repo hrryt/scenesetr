@@ -31,10 +31,8 @@ which a gradient between the two colours is applied to the object based on
 the degree to which each polygon faces the horizontal axis orthogonal to
 the direction the scene object faces. This gradient is a linear interpolation
 in the RGB colourspace.
-
-A scene object must be painted to be rendered by \code{\link[=see]{see()}}.
-
-By default, \code{\link[=light]{light()}} creates a white light.
+By default, \code{\link[=light]{light()}} creates a white light, and \code{\link[=read_obj]{read_obj()}} and \code{\link[=st_as_obj]{st_as_obj()}}
+paint the scene objects they return white.
 
 If \code{x} is a scene, \code{paint()} will be applied to every element in the scene.
 }
