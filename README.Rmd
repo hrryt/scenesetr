@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # scenesetr
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/hrryt/scenesetr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hrryt/scenesetr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of scenesetr is to allow R users to interactively explore and animate 
@@ -37,18 +38,18 @@ You can install the development version of scenesetr from [GitHub](https://githu
 devtools::install_github("hrryt/scenesetr")
 ```
 
-![Three rotating 3-D objects. From left to right: moai, moai, cat.](man/figures/README-three.gif)
-
 ## Usage
 
 ```r
 # install.packages(c("magrittr", "gifski"))
 library(magrittr)
+library(scenesetr)
 ```
 
 ### Visualise raster objects
 
 ```r
+# install.packages(c("sf", "dplyr", "stars"))
 # Shapefile from the British Antarctic Survey
 # https://data.bas.ac.uk/items/0779002b-b95d-432f-b035-b952c36aa5c9/
 antarctica <- sf::read_sf("add_contours_medium_res_v7.3") %>%
@@ -74,7 +75,7 @@ scene <- scene(
 
 record_gif(scene)
 ```
-![Rotating 3-D render of Antarctica. Data from of BAS.](man/figures/README-antarctica.gif)
+![Rotating 3-D render of Antarctica. Data from BAS](man/figures/README-antarctica.gif)
 
 ### Simulate emergent behaviour
 
@@ -90,11 +91,11 @@ scene <- scene(
   list = replicate(20, list(boid %>% place(200 * runif(3)))) # 20 boids
 )
 
-recording <- record(scene) # Recorded interactively
+recording <- record(scene) # Record interactively
 record_gif(recording)
 
 ```
-![Cat objects behaving as a swarm of boids](man/figures/README-boids.gif)
+![Cats behaving as a swarm of boids](man/figures/README-boids.gif)
 
 ### Design interactive experiences
 
@@ -137,3 +138,4 @@ record(recording) # Replay recording
 record_gif(recording) # Save to GIF
 ```
 ![Interactive control of objects, lights and cameras](man/figures/README-shoot.gif)
+

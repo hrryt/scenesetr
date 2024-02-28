@@ -4,6 +4,8 @@
 # scenesetr
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/hrryt/scenesetr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hrryt/scenesetr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of scenesetr is to allow R users to interactively explore and
@@ -26,23 +28,18 @@ You can install the development version of scenesetr from
 devtools::install_github("hrryt/scenesetr")
 ```
 
-<figure>
-<img src="man/figures/README-three.gif"
-alt="Three rotating 3-D objects. From left to right: moai, moai, cat." />
-<figcaption aria-hidden="true">Three rotating 3-D objects. From left to
-right: moai, moai, cat.</figcaption>
-</figure>
-
 ## Usage
 
 ``` r
 # install.packages(c("magrittr", "gifski"))
 library(magrittr)
+library(scenesetr)
 ```
 
 ### Visualise raster objects
 
 ``` r
+# install.packages(c("sf", "dplyr", "stars"))
 # Shapefile from the British Antarctic Survey
 # https://data.bas.ac.uk/items/0779002b-b95d-432f-b035-b952c36aa5c9/
 antarctica <- sf::read_sf("add_contours_medium_res_v7.3") %>%
@@ -71,9 +68,9 @@ record_gif(scene)
 
 <figure>
 <img src="man/figures/README-antarctica.gif"
-alt="Rotating 3-D render of Antarctica. Data from of BAS." />
+alt="Rotating 3-D render of Antarctica. Data from BAS" />
 <figcaption aria-hidden="true">Rotating 3-D render of Antarctica. Data
-from of BAS.</figcaption>
+from BAS</figcaption>
 </figure>
 
 ### Simulate emergent behaviour
@@ -90,14 +87,14 @@ scene <- scene(
   list = replicate(20, list(boid %>% place(200 * runif(3)))) # 20 boids
 )
 
-recording <- record(scene) # Recorded interactively
+recording <- record(scene) # Record interactively
 record_gif(recording)
 ```
 
 <figure>
 <img src="man/figures/README-boids.gif"
-alt="Cat objects behaving as a swarm of boids" />
-<figcaption aria-hidden="true">Cat objects behaving as a swarm of
+alt="Cats behaving as a swarm of boids" />
+<figcaption aria-hidden="true">Cats behaving as a swarm of
 boids</figcaption>
 </figure>
 
