@@ -40,14 +40,14 @@ st_as_obj <- function(
 
 #' @export
 st_as_obj.stars <- function(
-    x, col = "white", as_sphere = FALSE, radius = 10, raise = 1){
+    x, col = "white", as_sphere = FALSE, radius = 10, raise = TRUE){
   
   rlang::check_installed(
     c("stars", "sf"), reason = "to use `stars:::st_as_sf.stars()`, 
     `sf::st_coordinates()` and `sf::st_transform()`"
   )
   
-  x <- stars:::st_as_sf.stars(x)
+  x <- sf::st_as_sf(x)
   if(as_sphere) x <- sf::st_transform(x, "EPSG:4326")
   coords <- sf::st_coordinates(x)
   coords <- coords[duplicated(coords[, "L2"]) & coords[, "L1"] == 1, ]

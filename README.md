@@ -4,8 +4,6 @@
 # scenesetr
 
 <!-- badges: start -->
-
-[![R-CMD-check](https://github.com/hrryt/scenesetr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hrryt/scenesetr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of scenesetr is to allow R users to interactively explore and
