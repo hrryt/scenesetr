@@ -21,7 +21,7 @@
 
 record_gif <- function(
     x, gif_file = "animation.gif", width = 800,
-    delay = 1/60, loop = TRUE, progress = TRUE, 
+    delay = 1/30, loop = TRUE, progress = TRUE, 
     render_order = NULL, ...){
   
   rlang::check_installed("gifski", reason = "to use gifski()")

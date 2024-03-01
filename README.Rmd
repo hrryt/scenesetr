@@ -62,7 +62,7 @@ mosaic <- . %>%
 ice_mosaic <- mosaic("greenland_ice")
 bed_mosaic <- mosaic("greenland_bed")
 
-# Constant sea level
+# Set sea level constant
 sea_mosaic <- bed_mosaic
 sea_mosaic[[1]][!is.na(sea_mosaic[[1]])] <- 0 
 # Remove bed below sea level
@@ -85,8 +85,8 @@ ice <- globe(ice_mosaic) %>% paint("#ffffff99")
 # Create a scene with objects, lights and a camera
 scene <- scene(
   sea, bed, ice,
-  light(),
-  light() %>% place(NA) %>% point(c(-1,0,0)) %>% paint("lightyellow"),
+  light() %>% place(c(0,0,0)),
+  light() %>% point(c(-1,0,0)) %>% paint("lightyellow"),
   camera(aspect = 7/4) %>% rotate("right", 30) %>% behave(quit_after_frame)
 )
 
@@ -106,7 +106,8 @@ boid <- obj_example("cat.obj") %>%
 set.seed(1)
 scene <- scene(
   camera() %>% place(c(0,0,-300)),
-  light() %>% place(NA) %>% point(c(0,0,1)),
+  light() %>% point(c(0,0,1)),
+  light() %>% place(c(0,0,0)) %>% paint("lightyellow"),
   list = replicate(20, list(boid %>% place(200 * runif(3))))
 )
 
@@ -141,19 +142,22 @@ scene <- scene(
     behave(bullet),
   cat %>%
     place(c(0,0,0)) %>%
-    paint("white") %>%
+    paint("tan") %>%
     behave(wasd, jump),
   light() %>%
-    paint("yellow") %>%
-    place(c(0,0,-10)),
+    place(c(0,0,0)) %>%
+    behave(float_behind) %>%
+    paint("grey"),
   light() %>%
-    behave(float_behind),
-  light(),
+    point(c(0,0,1)) %>%
+    paint("lightyellow"),
   camera() %>%
     behave(float_behind)
 )
 
+# Record, watch back, then save to GIF
 recording <- record(scene)
+record(recording)
 record_gif(recording)
 ```
 ![Interactive control of objects, lights and cameras](man/figures/README-shoot.gif)

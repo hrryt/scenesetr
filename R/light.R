@@ -5,8 +5,7 @@
 #' 
 #' @details
 #' There are four categories of light. Ambient light, directional light, point 
-#' light and spotlight. Default arguments return a white point 
-#' light at the origin with no behaviour.
+#' light and spotlight. Default arguments return a white ambient light with no behaviour.
 #' 
 #' If a light is unplaced and has no direction, it is an ambient light, which 
 #' exerts equal shading on every polygon.
@@ -30,7 +29,7 @@
 
 light <- function(
     col = "white",
-    place = c(0,0,0),
+    place = NA,
     direction = NA,
     behaviours = list()){
   col <- format_col(col)

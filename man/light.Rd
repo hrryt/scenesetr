@@ -4,7 +4,7 @@
 \alias{light}
 \title{Create a Light}
 \usage{
-light(col = "white", place = c(0, 0, 0), direction = NA, behaviours = list())
+light(col = "white", place = NA, direction = NA, behaviours = list())
 }
 \arguments{
 \item{col}{vector of any of the three kinds of \R color specifications,
@@ -28,8 +28,7 @@ be seen from the viewpoint of a camera when \code{\link[=record]{record()}} is c
 }
 \details{
 There are four categories of light. Ambient light, directional light, point
-light and spotlight. Default arguments return a white point
-light at the origin with no behaviour.
+light and spotlight. Default arguments return a white ambient light with no behaviour.
 
 If a light is unplaced and has no direction, it is an ambient light, which
 exerts equal shading on every polygon.
