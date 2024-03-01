@@ -11,6 +11,7 @@ record_gif(
   delay = 1/60,
   loop = TRUE,
   progress = TRUE,
+  render_order = NULL,
   ...
 )
 }
@@ -29,6 +30,8 @@ once, or a number to indicate how many times to repeat after the first.}
 
 \item{progress}{print some verbose status output}
 
+\item{render_order}{optional numeric vector of object indices}
+
 \item{...}{other graphical parameters passed to \link{png}}
 }
 \description{
@@ -44,6 +47,6 @@ as no visible graphics window is used.
 If \code{x} is a scene, key inputs are logged and used in \code{record()} as each
 frame is calculated.
 
-All arguments except for \code{x} and \code{...} are passed to \code{gifski()}, along with
+All arguments except for \code{x}, \code{render_order} and \code{...} are passed to \code{gifski()}, along with
 the height calculated by \code{record()} from \code{width} and the aspect of the camera.
 }

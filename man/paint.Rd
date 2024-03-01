@@ -4,7 +4,7 @@
 \alias{paint}
 \title{The Colour of a Scene Element}
 \usage{
-paint(x, col)
+paint(x, col, scale = x$normals[1, ])
 }
 \arguments{
 \item{x}{scene object (object of class "scenesetr_obj") or light (object of
@@ -15,6 +15,8 @@ class "scenesetr_light") or scene (object of class "scenesetr_scene")}
     hexadecimal string of the form \code{"#rrggbb"} or
     \code{"#rrggbbaa"} (see \code{\link[grDevices]{rgb}}), or a positive integer
     \code{i} meaning \code{\link[grDevices]{palette}()[i]}.}
+
+\item{scale}{numeric vector. How far along the gradient is each face?}
 }
 \value{
 Scene object or light or scene with updated colour.
@@ -24,13 +26,18 @@ Change the colour of a light or scene object.
 }
 \details{
 Paints all polygons of a scene object a specified colour, or alternatively
-sets the colour of a light.
+sets the colour of a light. Transparency is ignored for lights, and transparent
+scene objects render much slower than opaque objects.
 
 Additionally, two colours can be given when painting a scene object, upon
-which a gradient between the two colours is applied to the object based on
-the degree to which each polygon faces the horizontal axis orthogonal to
-the direction the scene object faces. This gradient is a linear interpolation
-in the RGB colourspace.
+which a gradient between the two colours is applied to the object.
+This gradient is a linear interpolation in the RGBA colourspace. \code{scale},
+a numeric vector with an element for each face, specifies how far along this
+gradient each face is, and is automatically constrained to lie from 0 to 1.
+
+By default, \code{scale} is the degree to which each polygon faces the horizontal axis
+orthogonal to the direction the scene object faces.
+
 By default, \code{\link[=light]{light()}} creates a white light, and \code{\link[=read_obj]{read_obj()}} and \code{\link[=st_as_obj]{st_as_obj()}}
 paint the scene objects they return white.
 

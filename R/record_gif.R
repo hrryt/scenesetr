@@ -12,7 +12,7 @@
 #' If `x` is a scene, key inputs are logged and used in `record()` as each 
 #' frame is calculated.
 #' 
-#' All arguments except for `x` and `...` are passed to `gifski()`, along with 
+#' All arguments except for `x`, `render_order` and `...` are passed to `gifski()`, along with 
 #' the height calculated by `record()` from `width` and the aspect of the camera.
 #' 
 #' @inheritParams gifski::save_gif
@@ -21,7 +21,8 @@
 
 record_gif <- function(
     x, gif_file = "animation.gif", width = 800,
-    delay = 1/60, loop = TRUE, progress = TRUE, ...){
+    delay = 1/60, loop = TRUE, progress = TRUE, 
+    render_order = NULL, ...){
   
   rlang::check_installed("gifski", reason = "to use gifski()")
   imgdir <- tempfile("tmppng")
@@ -29,7 +30,7 @@ record_gif <- function(
   on.exit(unlink(imgdir, recursive = TRUE))
   filename <- file.path(imgdir, "tmpimg_%05d.png")
   
-  recording <- record(x, device = grDevices::png, width = width, filename = filename, ...)
+  recording <- record(x, device = grDevices::png, width = width, render_order = render_order, filename = filename, ...)
   images <- list.files(imgdir, pattern = "tmpimg_\\d{5}.png", full.names = TRUE)
   
   camera <- get_camera(x)

@@ -2,6 +2,7 @@
 % Please edit documentation in R/behaviour_examples.R
 \name{spin}
 \alias{spin}
+\alias{quit_after_frame}
 \alias{boid}
 \alias{excited}
 \alias{pushable}
@@ -16,6 +17,8 @@
 \title{Example Behaviours of Scene Elements}
 \usage{
 spin(axis, angle, quit_after_cycle = FALSE)
+
+quit_after_frame(element, frame, ...)
 
 boid(element, scene, ...)
 
@@ -52,9 +55,11 @@ quit once one full rotation of the element is completed}
 \item{element}{a scene element with the defined behaviour, to be modified by
 the behaviour each frame}
 
-\item{scene}{the entire scene as it was the previous frame}
+\item{frame}{numeric value. Frame number, starting at one.}
 
 \item{...}{ignored}
+
+\item{scene}{the entire scene as it was the previous frame}
 
 \item{keys}{character vector of keys held during the current frame}
 
@@ -78,6 +83,8 @@ All of the functions in this topic except for \code{spin()} are behaviours.
 
 \code{spin()} returns a behaviour function for the rotation of an element each frame
 about the axis and by the angle specified.
+
+An element with the \code{quit_after_frame} behaviour quits the device after one frame.
 
 A swarm of elements with the \code{boid} behaviour will act as a swarm of boids.
 

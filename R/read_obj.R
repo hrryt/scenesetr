@@ -14,8 +14,8 @@
 #' If no face normals or face normal indices are found, they will be added 
 #' by [add_normals].
 #' 
-#' All returned scene objects are painted white, unplaced, have no behaviours and 
-#' face the positive z direction.
+#' All returned scene objects are painted white, unplaced, 
+#' have no behaviours and face the positive z direction.
 #' 
 #' @param file a connection object or a character string.
 #' @param take_first logical value indicating whether only the first object

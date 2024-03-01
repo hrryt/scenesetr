@@ -8,7 +8,7 @@ shade <- function(original_col, wslight, N, V, V_raw){
   no_place <- anyNA(place)
   no_rotation <- anyNA(rotation)
   
-  if(no_place & no_rotation) return(shade / 4)
+  if(no_place & no_rotation) return(shade)
   
   direction <- rotation %qpq% c(0,0,-1)
   

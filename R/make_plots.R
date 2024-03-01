@@ -1,4 +1,4 @@
-make_plots <- function(scene, interactive, key_inputs, device, width, ...){
+make_plots <- function(scene, render_order, interactive, key_inputs, device, width, ...){
   
   camera_index <- sapply(scene, inherits, "scenesetr_camera")
   stopifnot(
@@ -18,6 +18,9 @@ make_plots <- function(scene, interactive, key_inputs, device, width, ...){
   
   which_object <- double(n_scene)
   which_object[obj_index] <- seq_len(sum(obj_index))
+  
+  calculate_wsorder <- is.null(render_order)
+  wsorder <- render_order
   
   wsplaces <- matrix(double(), 4, n_objects)
   if(!no_objects){
@@ -109,9 +112,11 @@ make_plots <- function(scene, interactive, key_inputs, device, width, ...){
     wslights <- lapply(wslights, camera_transform, c_matrix, c_rotation)
     
     # set object render order
-    wsmidpts <- c_matrix %*% (midpts + wsplaces)
-    wsmidpts <- c_rotation %qMq% wsmidpts
-    wsorder <- order(wsmidpts[3, ], decreasing = TRUE)
+    if(calculate_wsorder){
+      wsmidpts <- c_matrix %*% (midpts + wsplaces)
+      wsmidpts <- c_rotation %qMq% wsmidpts
+      wsorder <- order(wsmidpts[3, ], decreasing = TRUE)
+    }
     
     # plot objects
     all_poly <- array(double(), c(max_sides, max_polys, 2, n_objects))
@@ -167,9 +172,10 @@ make_plots <- function(scene, interactive, key_inputs, device, width, ...){
       
       col_0 <- object$col[wsfaces[1, ], ]
       col <- matrix(0, nrow(col_0), 3)
-      for(wslight in wslights) col <- col + shade(col_0, wslight, N, V, V_raw)
-      col <- col / length(wslights)
-      all_col[[o]] <- rgb(col, maxColorValue = 255)
+      for(wslight in wslights) col <- col + shade(col_0[, -4], wslight, N, V, V_raw)
+      # col <- col / length(wslights)
+      col[col > 255] <- 255
+      all_col[[o]] <- rgb(col, alpha = col_0[, 4], maxColorValue = 255)
     }
     
     all_poly <- all_poly[, , , wsorder, drop = FALSE]

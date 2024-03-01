@@ -1,6 +1,6 @@
 obj <- function(
     pts = NA_real_, normals = NA_real_, faces = NA_real_,
-    col = NA_real_, place = rep(NA_real_, 3),
+    col = NA_real_, place = NA_real_,
     rotation = c(1,0,0,0), behaviours = list()){
   new_obj(pts, normals, faces, col, place, rotation, behaviours)
 }

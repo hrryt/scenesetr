@@ -4,7 +4,7 @@
 \alias{record}
 \title{Interactive 3-D Render of a Scene}
 \usage{
-record(x, device = grDevices::dev.new, width = 7, ...)
+record(x, device = grDevices::dev.new, width = 7, render_order = NULL, ...)
 }
 \arguments{
 \item{x}{scene (object of class "scenesetr_scene")
@@ -13,6 +13,8 @@ or recording (object of class "scenesetr_recording")}
 \item{device}{function. Graphics device to be used.}
 
 \item{width}{passed to device function}
+
+\item{render_order}{optional numeric vector of object indices}
 
 \item{...}{passed to device function}
 }
@@ -46,6 +48,10 @@ If \verb{device = }\code{\link[grDevices:dev]{grDevices::dev.new}}, as default, 
 as the RStudio graphics device does not accept arguments such as \code{width} and \code{height}.
 The \code{height} argument passed to the device depends on \code{width} and the aspect of the
 camera.
+
+If \code{render_order} is specified, rendering order is no longer calculated based on
+position in the scene. \code{render_order = 3:1}, for example, ensures only the first
+three objects in the scene are rendered each frame, from last to first.
 }
 \seealso{
 \code{\link[=scene]{scene()}}, \code{\link[=read_obj]{read_obj()}}, \code{\link[=record_gif]{record_gif()}}.

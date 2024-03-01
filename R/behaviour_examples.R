@@ -11,6 +11,8 @@
 #' 
 #' `spin()` returns a behaviour function for the rotation of an element each frame 
 #' about the axis and by the angle specified.
+#'  
+#' An element with the `quit_after_frame` behaviour quits the device after one frame.
 #' 
 #' A swarm of elements with the `boid` behaviour will act as a swarm of boids.
 #' 
@@ -53,6 +55,7 @@
 #' @param scene the entire scene as it was the previous frame
 #' @param keys character vector of keys held during the current frame
 #' @param last_keys character vector of keys held during the previous frame
+#' @param frame numeric value. Frame number, starting at one.
 #' @param ... ignored
 #' @returns
 #' For `spin()`, a behaviour function.
@@ -70,6 +73,13 @@ spin <- function(axis, angle, quit_after_cycle = FALSE){
     if(quit_after_cycle && frame == stop_frame) return(quit_device("Cycle completed\n"))
     rotate(element, axis, angle)
   }
+}
+
+#' @rdname spin
+#' @export
+quit_after_frame <- function(element, frame, ...){
+  if(frame == 2) return(quit_device("One frame rendered\n"))
+  element
 }
 
 #' @rdname spin

@@ -4,10 +4,18 @@
 \alias{st_as_obj}
 \title{Convert Raster to Scene Object}
 \usage{
-st_as_obj(x)
+st_as_obj(x, col = "white", as_sphere = FALSE, radius = 10, raise = TRUE)
 }
 \arguments{
 \item{x}{stars raster object}
+
+\item{col}{passed to \code{\link[=paint]{paint()}} with \code{scale} as the raster attribute}
+
+\item{as_sphere}{logical value indicating if a sphere should be returned}
+
+\item{radius}{radius of the sphere if \code{as_sphere = TRUE}}
+
+\item{raise}{logical value indicating if height should be scaled by raster attribute}
 }
 \value{
 Scene object (object of class "scenesetr_obj").
@@ -21,14 +29,23 @@ The raster object is assumed to have 2 dimensions and 1 attribute.
 The x and y dimensions of the raster are mapped onto the x and z axes in 3-D space.
 The attribute of the raster is taken to be the y coordinate at each cell in the xz grid.
 
-The raster object is first converted by \link[stars:st_as_sf]{stars::st_as_sf} to an sf object
+The raster object is first converted by \code{\link[stars:st_as_sf]{stars::st_as_sf()}} to an sf object
 of square polygons, one for each raster cell, with one attribute value per polygon.
 The y coordinate of each point is determined by the attribute value of the
 polygon in which it is first encountered.
 
-Surface normals are added to the scene object by \link{add_normals}.
+If \code{as_sphere = TRUE}, the x and y dimensions of the raster are instead taken
+to be longitude and latitude respectively, and are mapped to 3-D cartesian
+coordinated on a sphere with the north pole facing in the positive y direction.
+To ensure x and y are longitude and latitude,
+\code{\link[sf:st_transform]{sf::st_transform}}\code{(crs = "EPSG:4326")} is used.
 
-The returned scene object is painted white, unplaced, has no behaviours and
+Should a vector of two colours be passed to \code{col}, each polygon will be coloured
+on a gradient between the two colours based on the attribute of the raster.
+
+Surface normals are added to the scene object by \code{\link[=add_normals]{add_normals()}}.
+
+The returned scene object is unplaced, has no behaviours and
 faces the positive z direction.
 }
 \seealso{
