@@ -1,4 +1,4 @@
-make_plots <- function(scene, render_order, interactive, key_inputs, device, width, ...){
+make_plots <- function(scene, render_order, interactive, key_inputs, device, width, lwd, ...){
   
   camera_index <- sapply(scene, inherits, "scenesetr_camera")
   stopifnot(
@@ -121,6 +121,7 @@ make_plots <- function(scene, render_order, interactive, key_inputs, device, wid
     # plot objects
     all_poly <- array(double(), c(max_sides, max_polys, 2, n_objects))
     all_col <- vector("list", n_objects)
+    all_border <- vector("list", n_objects)
     
     for(o in seq_len(n_objects)){
       
@@ -137,18 +138,23 @@ make_plots <- function(scene, render_order, interactive, key_inputs, device, wid
       wspts <- c_matrix_object %*% wspts
       wspts <- c_rotation %qMq% wspts
       
-      wsnormals <- object$normals
-      wsnormals <- object$rotation %qMq% wsnormals
-      wsnormals <- c_rotation %qMq% wsnormals
-      
       faces <- object$faces
       n_sides <- nrow(faces) - 1
       render_order <- order(wspts[3, faces[2, ]], decreasing = TRUE)
       wsfaces <- faces[, render_order, drop = FALSE]
       
       wspts_by_face <- wspts[-4, wsfaces[2, ], drop = FALSE]
-      wsnormals_by_face <- wsnormals[, wsfaces[1, ], drop = FALSE]
-      facing_camera <- colSums(wsnormals_by_face * wspts_by_face) < 0
+      
+      wsnormals <- object$normals
+      has_normals <- !identical(wsnormals, NA_real_)
+      
+      if(has_normals){
+        wsnormals <- object$rotation %qMq% wsnormals
+        wsnormals <- c_rotation %qMq% wsnormals
+        
+        wsnormals_by_face <- wsnormals[, wsfaces[1, ], drop = FALSE]
+        facing_camera <- colSums(wsnormals_by_face * wspts_by_face) < 0
+      } else facing_camera <- TRUE
       
       wspts_behind <- wspts[3, ] < 0
       behind <- matrix(wspts_behind[wsfaces[-1, ]], nrow = n_sides)
@@ -157,35 +163,42 @@ make_plots <- function(scene, render_order, interactive, key_inputs, device, wid
       render <- facing_camera & !behind
       n_render <- sum(render)
       
-      if(n_render < 2) next
+      if(n_render == 0) next
       
       wspts <- t(p_matrix %*% wspts)
-      wspts <- wspts[, c(1, 2)] / wspts[, 4]
+      wspts <- wspts[, c(1, 2), drop = FALSE] / wspts[, 4]
       
-      wsfaces <- wsfaces[, render]
-      
+      wsfaces <- wsfaces[, render, drop = FALSE]
       all_poly[seq_len(n_sides), seq_len(n_render), , o] <- wspts[wsfaces[-1, ], ]
       
-      N <- wsnormals_by_face[, render]
-      V_raw <- -wspts_by_face[, render]
-      V <- sweep(V_raw, 2, sqrt(colSums(V_raw^2)), `/`, FALSE)
+      if(has_normals){
+        N <- wsnormals_by_face[, render, drop = FALSE]
+        V_raw <- -wspts_by_face[, render, drop = FALSE]
+        V <- sweep(V_raw, 2, sqrt(colSums(V_raw^2)), `/`, FALSE)
+        
+        col_index <- if(nrow(object$col) == 1) rep(1, n_render) else wsfaces[1, ]
+        col_0 <- object$col[col_index, , drop = FALSE]
+        col <- matrix(0, nrow(col_0), 3)
+        for(wslight in wslights) col <- col + shade(col_0[, -4], wslight, N, V, V_raw)
+        # col <- col / length(wslights)
+        col[col > 255] <- 255
+        all_col[[o]] <- rgb(col, alpha = col_0[, 4], maxColorValue = 255)
+      } else all_col[[o]] <- rep(NA, n_render)
       
-      col_0 <- object$col[wsfaces[1, ], ]
-      col <- matrix(0, nrow(col_0), 3)
-      for(wslight in wslights) col <- col + shade(col_0[, -4], wslight, N, V, V_raw)
-      # col <- col / length(wslights)
-      col[col > 255] <- 255
-      all_col[[o]] <- rgb(col, alpha = col_0[, 4], maxColorValue = 255)
+      border <- object$border
+      border <- if(length(border) == 1) rep(border, n_render) else border[wsfaces[1, ]]
+      all_border[[o]] <- border
     }
     
     all_poly <- all_poly[, , , wsorder, drop = FALSE]
-    all_x <- c(all_poly[, , 1, ])
-    all_y <- c(all_poly[, , 2, ])
+    all_x <- as.vector(all_poly[, , 1, ])
+    all_y <- as.vector(all_poly[, , 2, ])
     all_col <- unlist(all_col[wsorder])
+    all_border <- unlist(all_border[wsorder])
     
     plot.new()
     plot.window(xlim = xylim, ylim = xylim)
-    polygon(all_x, all_y, col = all_col, border = NA)
+    polygon(x = all_x, y = all_y, col = all_col, border = all_border, lwd = lwd)
   }
   
   dev.off()

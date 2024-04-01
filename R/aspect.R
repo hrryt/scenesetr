@@ -7,6 +7,8 @@
 #' 
 #' `aspect(x) <- value` assigns a value to the aspect ratio of a camera.
 #' 
+#' `set_aspect` is an alias of `aspect<-` useful in pipes.
+#' 
 #' By default, [camera()] generates a camera with an aspect ratio of 1.
 #' 
 #' The aspect ratio of a camera in a scene is used by [record()] in setting 
@@ -20,7 +22,8 @@
 #' @returns
 #' For `aspect(x)`, the aspect ratio as a double.
 #' 
-#' For `aspect(x) <- value`, the updated camera. (Note that the value of 
+#' For `aspect(x) <- value` and `set_aspect(x, value)`, the updated camera. 
+#' (Note that the value of 
 #' `aspect(x) <- value` is that of the assignment, `value`, not the return 
 #' value from the left-hand side.)
 #' @export
@@ -39,3 +42,7 @@ aspect <- function(x){
   x$aspect <- as.double(value)
   x
 }
+
+#' @rdname aspect
+#' @export
+set_aspect <- `aspect<-`

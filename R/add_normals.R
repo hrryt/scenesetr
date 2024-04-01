@@ -17,8 +17,8 @@
 #' @export
 add_normals <- function(x){
   
-  pts <- x$pts[-4, ]
-  faces <- x$faces[-1, ]
+  pts <- x$pts[-4, , drop = FALSE]
+  faces <- x$faces[-1, , drop = FALSE]
   
   sides <- colSums(!is.na(faces))
   face_seq <- seq_len(ncol(faces))

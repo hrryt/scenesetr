@@ -38,11 +38,12 @@ library(scenesetr)
 
 ``` r
 # install.packages(c("sf", "stars"))
+# Modify st_downsample argument for faster render
 mosaic <- . %>%
   list.files(full.names = TRUE) %>%
   lapply(stars::read_stars) %>%
   do.call(what = stars::st_mosaic) %>%
-  stars::st_downsample(10) %>%
+  stars::st_downsample(5) %>%
   multiply_by(1.5e-4)
 
 # read .tif files to stars raster
@@ -51,13 +52,16 @@ mosaic <- . %>%
 ice_mosaic <- mosaic("greenland_ice")
 bed_mosaic <- mosaic("greenland_bed")
 
+# Bed below sea level
+sea_bed_mosaic <- bed_mosaic
+sea_bed_mosaic[[1]][sea_bed_mosaic[[1]] >= 0] <- NA 
 # Set sea level constant
-sea_mosaic <- bed_mosaic
-sea_mosaic[[1]][!is.na(sea_mosaic[[1]])] <- 0 
-# Remove bed below sea level
-bed_mosaic[[1]][bed_mosaic[[1]] < 0] <- NA 
+sea_mosaic <- sea_bed_mosaic
+sea_mosaic[[1]][!is.na(sea_mosaic[[1]])] <- 0
+# Surface above sea level
+bed_mosaic[[1]][bed_mosaic[[1]] < 0] <- NA
 ice_mosaic[[1]][ice_mosaic[[1]] < 0] <- NA
-# Remove ice below bed
+# Ice above bed
 ice_mosaic[[1]][(ice_mosaic - bed_mosaic)[[1]] <= 0] <- NA
 
 # Convert raster to scene object
@@ -67,20 +71,21 @@ globe <- . %>%
   rotate("up", 75) %>%
   rotate("right", 25)
 
-sea <- globe(sea_mosaic) %>% paint("royalblue4")
+sea_bed <- globe(sea_bed_mosaic) %>% paint("ivory4")
+new_sea <- globe(new_sea_mosaic) %>% paint("#27408b99")
 bed <- globe(bed_mosaic) %>% paint("darkolivegreen")
 ice <- globe(ice_mosaic) %>% paint("#ffffff99")
 
 # Create a scene with objects, lights and a camera
 scene <- scene(
-  sea, bed, ice,
+  sea_bed, sea, bed, ice,
   light() %>% place(c(0,0,0)),
   light() %>% point(c(-1,0,0)) %>% paint("lightyellow"),
-  camera(aspect = 7/4) %>% rotate("right", 30) %>% behave(quit_after_frame)
+  camera() %>% set_aspect(16/9) %>% rotate("right", 30) %>% behave(quit_after_frame)
 )
 
 # Record to png
-record(scene, render_order = 1:3, device = png, width = 800)
+record(scene, render_order = 1:4, device = png, width = 1920)
 ```
 
 <figure>

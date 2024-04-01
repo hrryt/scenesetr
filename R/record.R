@@ -26,11 +26,14 @@
 #' position in the scene. `render_order = 3:1`, for example, ensures only the first 
 #' three objects in the scene are rendered each frame, from last to first.
 #' 
+#' `lwd` specifies the linewidth of polygon borders. See [border()].
+#' 
 #' @param x scene (object of class "scenesetr_scene") 
 #' or recording (object of class "scenesetr_recording")
 #' @param device function. Graphics device to be used.
 #' @param width passed to device function
 #' @param render_order optional numeric vector of object indices
+#' @param lwd passed to [graphics::polygon()]
 #' @param ... passed to device function
 #' @returns Object of class "scenesetr_recording", invisibly. List of three elements:
 #' * `initial_scene`: the original scene passed to `record()`,
@@ -40,19 +43,19 @@
 #' @export
 
 record <- function(
-    x, device = grDevices::dev.new, width = 7, render_order = NULL, ...) UseMethod("record")
+    x, device = grDevices::dev.new, width = 7, render_order = NULL, lwd = 1, ...) UseMethod("record")
 
 #' @export
 record.scenesetr_scene <- function(
-    x, device = grDevices::dev.new, width = 7, render_order = NULL, ...){
+    x, device = grDevices::dev.new, width = 7, render_order = NULL, lwd = 1, ...){
   make_plots(
     scene = x, render_order = render_order, interactive = TRUE, 
-    key_inputs = list(), device = device, width = width, ...
+    key_inputs = list(), device = device, width = width, lwd = lwd, ...
   )
 }
 
 #' @export
 record.scenesetr_recording <- function(
-    x, device = grDevices::dev.new, width = 7, render_order = NULL, ...){
-  make_plots(x$initial_scene, render_order, FALSE, x$key_inputs, device, width, ...)
+    x, device = grDevices::dev.new, width = 7, render_order = NULL, lwd = 1, ...){
+  make_plots(x$initial_scene, render_order, FALSE, x$key_inputs, device, width, lwd, ...)
 }

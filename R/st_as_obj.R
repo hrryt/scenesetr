@@ -44,29 +44,29 @@ st_as_obj.stars <- function(
   
   rlang::check_installed(
     c("stars", "sf"), reason = "to use `stars:::st_as_sf.stars()`, 
-    `sf::st_coordinates()` and `sf::st_transform()`"
+    `sf::st_geometry()`, `sf::st_drop_geometry()` and `sf::st_transform()`"
   )
   
   x <- sf::st_as_sf(x)
   if(as_sphere) x <- sf::st_transform(x, "EPSG:4326")
-  coords <- sf::st_coordinates(x)
-  coords <- coords[duplicated(coords[, "L2"]) & coords[, "L1"] == 1, ]
+  coords <- coord_2(lapply(sf::st_geometry(x), `[[`, 1))
+  coords <- coords[duplicated(coords[, "L1"]), ]
   
-  xy_char <- paste0(coords[, "X"], coords[, "Y"])
+  xy_char <- sprintf("%.5f%.5f", coords[, 1], coords[, 2])
   uniques <- !duplicated(xy_char)
   point_index <- match(xy_char, xy_char[uniques])
   
-  face_index <- coords[, "L2"]
+  face_index <- coords[, "L1"]
   sides <- rle(face_index)$lengths
   
   faces <- matrix(NA_integer_, max(sides) + 1, max(face_index))
   faces[cbind(sequence(sides) + 1, face_index)] <- point_index
   
   coords <- coords[uniques, ]
-  scale <- x[names(x) != "geometry"][[1]]
-  x <- coords[, "X"]
-  y <- coords[, "Y"]
-  point_scale <- raise * scale[coords[, "L2"]]
+  scale <- as.numeric(sf::st_drop_geometry(x)[[1]])
+  x <- coords[, 1]
+  y <- coords[, 2]
+  point_scale <- if(raise) scale[coords[, "L1"]] else 0
   
   if(!as_sphere){
     points <- rbind(x, point_scale, y, 1)
@@ -82,4 +82,8 @@ st_as_obj.stars <- function(
   points[, -4] <- points[, -4] * (radius + point_scale)
   points <- t(points)
   paint(add_normals(obj(pts = points, faces = faces)), col, scale)
+}
+
+coord_2 <- function(x){
+  cbind(do.call(rbind, x), L1 = rep(seq_along(x), times = vapply(x, nrow, 0L)))
 }

@@ -16,8 +16,13 @@
 #' By default, `scale` is the degree to which each polygon faces the horizontal axis 
 #' orthogonal to the direction the scene object faces.
 #' 
-#' By default, [light()] creates a white light, and [read_obj()] and [st_as_obj()] 
-#' paint the scene objects they return white.
+#' By default, [light()] creates a white light, [read_obj()] and [st_as_obj()] 
+#' create white scene objects, and [point_cloud()] creates a transparent scene 
+#' object.
+#' 
+#' Using [paint()] on a point cloud will not affect its appearance. To change 
+#' the colours of a point cloud, the border value must be set, as each point 
+#' is rendered as a polygon. 
 #' 
 #' If `x` is a scene, `paint()` will be applied to every element in the scene.
 #' 
@@ -32,12 +37,14 @@ paint <- function(x, col, scale = x$normals[1, ]) UseMethod("paint")
 
 #' @export
 paint.scenesetr_obj <- function(x, col, scale = x$normals[1, ]){
-  if(length(col) == 1) col <- rep(col, 2)
+  one_col <- length(col) == 1
   col <- grDevices::col2rgb(col, alpha = TRUE)
-  scale <- restrict(scale)
-  scale[is.na(scale)] <- 0.5
-  col <- t(col[, 1] + (col[, 2] - col[, 1]) %o% scale)
-  x$col <- col
+  if(!one_col){
+    scale <- restrict(scale)
+    scale[is.na(scale)] <- 0.5
+    col <- col[, 1] + (col[, 2] - col[, 1]) %o% scale
+  }
+  x$col <- t(col)
   x
 }
 

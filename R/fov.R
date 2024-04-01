@@ -7,6 +7,8 @@
 #' 
 #' `fov(x) <- value` assigns a value to the field of view of a camera.
 #' 
+#' `set_fov` is an alias of `fov<-` useful in pipes.
+#' 
 #' By default, [camera()] generates a camera with a sixty degree field of view.
 #' 
 #' The field of view of a camera in a scene is used by [record()] in configuring 
@@ -16,7 +18,8 @@
 #' @returns
 #' For `fov(x)`, the field of view as a double.
 #' 
-#' For `fov(x) <- value`, the updated camera. (Note that the value of 
+#' For `fov(x) <- value`, and `set_fov(x, value)`, the updated camera. 
+#' (Note that the value of 
 #' `fov(x) <- value` is that of the assignment, `value`, not the return 
 #' value from the left-hand side.)
 #' @export
@@ -33,3 +36,7 @@ fov <- function(x) x$fov
   x$fov <- value
   x
 }
+
+#' @rdname fov
+#' @export
+set_fov <- `fov<-`

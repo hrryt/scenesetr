@@ -4,7 +4,14 @@
 \alias{record}
 \title{Interactive 3-D Render of a Scene}
 \usage{
-record(x, device = grDevices::dev.new, width = 7, render_order = NULL, ...)
+record(
+  x,
+  device = grDevices::dev.new,
+  width = 7,
+  render_order = NULL,
+  lwd = 1,
+  ...
+)
 }
 \arguments{
 \item{x}{scene (object of class "scenesetr_scene")
@@ -15,6 +22,8 @@ or recording (object of class "scenesetr_recording")}
 \item{width}{passed to device function}
 
 \item{render_order}{optional numeric vector of object indices}
+
+\item{lwd}{passed to \code{\link[graphics:polygon]{graphics::polygon()}}}
 
 \item{...}{passed to device function}
 }
@@ -52,6 +61,8 @@ camera.
 If \code{render_order} is specified, rendering order is no longer calculated based on
 position in the scene. \code{render_order = 3:1}, for example, ensures only the first
 three objects in the scene are rendered each frame, from last to first.
+
+\code{lwd} specifies the linewidth of polygon borders. See \code{\link[=border]{border()}}.
 }
 \seealso{
 \code{\link[=scene]{scene()}}, \code{\link[=read_obj]{read_obj()}}, \code{\link[=record_gif]{record_gif()}}.

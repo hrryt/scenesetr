@@ -8,10 +8,11 @@ record_gif(
   x,
   gif_file = "animation.gif",
   width = 800,
-  delay = 1/60,
+  delay = 1/30,
   loop = TRUE,
   progress = TRUE,
   render_order = NULL,
+  lwd = 1,
   ...
 )
 }
@@ -32,7 +33,17 @@ once, or a number to indicate how many times to repeat after the first.}
 
 \item{render_order}{optional numeric vector of object indices}
 
+\item{lwd}{passed to \code{\link[graphics:polygon]{graphics::polygon()}}}
+
 \item{...}{other graphical parameters passed to \link{png}}
+}
+\value{
+Object of class "scenesetr_recording", invisibly. List of three elements:
+\itemize{
+\item \code{initial_scene}: the original scene passed to \code{record()},
+\item \code{final_scene}: the scene as it was in the last frame before quitting the device,
+\item \code{key_inputs}: a list of key inputs, with one element per frame recorded.
+}
 }
 \description{
 Save a recording to GIF or record a scene to GIF.

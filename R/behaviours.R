@@ -63,12 +63,22 @@ behaviours <- function(x){
 
 #' @rdname behaviours
 #' @export
-behave <- function(x, ...){
+behave <- function(x, ...) UseMethod("behave")
+
+#' @export
+behave.default <- function(x, ...){
   behaviours <- list(...)
   unnamed <- unnamed(behaviours)
   names(behaviours)[unnamed] <- as.character(match.call()[-c(1,2)][unnamed])
   x$behaviours <- modifyList(x$behaviours, behaviours)
   x$behaviours[unnamed(x$behaviours)] <- NULL
+  x
+}
+
+#' @export
+behave.scenesetr_scene <- function(x, ...){
+  dots <- as.list(match.call()[-c(1,2)])
+  x[] <- lapply(x, \(element) do.call(behave, c(list(element), dots)))
   x
 }
 

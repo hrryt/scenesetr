@@ -3,11 +3,14 @@
 \name{aspect}
 \alias{aspect}
 \alias{aspect<-}
+\alias{set_aspect}
 \title{The Aspect Ratio of a Camera}
 \usage{
 aspect(x)
 
 aspect(x) <- value
+
+set_aspect(x, value)
 }
 \arguments{
 \item{x}{camera (object of class "scenesetr_camera")}
@@ -17,7 +20,8 @@ aspect(x) <- value
 \value{
 For \code{aspect(x)}, the aspect ratio as a double.
 
-For \code{aspect(x) <- value}, the updated camera. (Note that the value of
+For \code{aspect(x) <- value} and \code{set_aspect(x, value)}, the updated camera.
+(Note that the value of
 \code{aspect(x) <- value} is that of the assignment, \code{value}, not the return
 value from the left-hand side.)
 }
@@ -28,6 +32,8 @@ Functions to get or set the aspect ratio of a camera.
 \code{aspect(x)} returns the aspect ratio of a camera.
 
 \code{aspect(x) <- value} assigns a value to the aspect ratio of a camera.
+
+\code{set_aspect} is an alias of \verb{aspect<-} useful in pipes.
 
 By default, \code{\link[=camera]{camera()}} generates a camera with an aspect ratio of 1.
 

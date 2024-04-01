@@ -1,8 +1,12 @@
 obj <- function(
     pts = NA_real_, normals = NA_real_, faces = NA_real_,
-    col = NA_real_, place = NA_real_,
+    col = NA_real_, place = NA_real_, border = NA,
     rotation = c(1,0,0,0), behaviours = list()){
-  new_obj(pts, normals, faces, col, place, rotation, behaviours)
+  mode(pts) <- "double"
+  mode(normals) <- "double"
+  mode(faces) <- "integer"
+  mode(col) <- "double"
+  new_obj(pts, normals, faces, col, place, rotation, behaviours, border)
 }
 
 new_obj <- function(
@@ -12,7 +16,8 @@ new_obj <- function(
     col = double(),
     place = double(),
     rotation = double(),
-    behaviours = list()){
+    behaviours = list(),
+    border = NULL){
   stopifnot(
     is.double(pts),
     is.double(normals),
@@ -29,7 +34,8 @@ new_obj <- function(
     col = col,
     place = place,
     rotation = rotation,
-    behaviours = behaviours
+    behaviours = behaviours,
+    border = border
   )
   class(x) <- "scenesetr_obj"
   x
