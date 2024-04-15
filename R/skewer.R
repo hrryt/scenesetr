@@ -39,10 +39,10 @@ skewer <- function(x, direction = c("up", "down", "left", "right", "clockwise"),
   dir <- match.arg(direction)
   if(!to_rotate) dir <- switch(
     dir,
-    up = "right",
-    down = "left",
-    left = "up",
-    right = "down",
+    down = "right",
+    up = "left",
+    left = "down",
+    right = "up",
     clockwise = stop("to_rotate must be TRUE if direction is clockwise")
   )
   d <- direction(x)
@@ -50,9 +50,9 @@ skewer <- function(x, direction = c("up", "down", "left", "right", "clockwise"),
     dir,
     up = c(-d[3], 0, d[1]),
     down = c(d[3], 0, -d[1]),
-    left = c(d[1]*d[2], -sum(d[-2]^2), d[2]*d[3]),
-    right = c(-d[1]*d[2], sum(d[-2]^2), -d[2]*d[3]),
+    right = c(d[1]*d[2], -sum(d[-2]^2), d[2]*d[3]),
+    left = c(-d[1]*d[2], sum(d[-2]^2), -d[2]*d[3]),
     clockwise = d
   )
-  roll(x$rotation) %qpq% axis
+  roll(x$orientation) %qpq% axis
 }

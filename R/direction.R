@@ -18,11 +18,11 @@
 #' For `direction(x) <- value`, the updated scene element. (Note that the value of 
 #' `direction(x) <- value` is that of the assignment, `value`, not the return 
 #' value from the left-hand side.)
-#' @seealso [point()], [rotate()], [rotation()], [looked_at()], [skewer()].
+#' @seealso [point()], [rotate()], [orientation()], [looked_at()], [skewer()].
 #' @export
 
 direction <- function(x){
-  x$rotation %qpq% c(0,0,1)
+  x$orientation %qpq% c(0,0,1)
 }
 
 #' @rdname direction

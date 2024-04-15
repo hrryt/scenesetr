@@ -4,17 +4,13 @@
 \alias{paint}
 \title{The Colour of a Scene Element}
 \usage{
-paint(x, col, scale = x$normals[1, ])
+paint(x, color, scale = x$normals[1, ])
 }
 \arguments{
 \item{x}{scene object (object of class "scenesetr_obj") or light (object of
 class "scenesetr_light") or scene (object of class "scenesetr_scene")}
 
-\item{col}{vector of any of the three kinds of \R color specifications,
-    i.e., either a color name (as listed by \code{\link[grDevices]{colors}()}), a
-    hexadecimal string of the form \code{"#rrggbb"} or
-    \code{"#rrggbbaa"} (see \code{\link[grDevices]{rgb}}), or a positive integer
-    \code{i} meaning \code{\link[grDevices]{palette}()[i]}.}
+\item{color}{passed to \code{\link[grDevices:col2rgb]{grDevices::col2rgb()}}}
 
 \item{scale}{numeric vector. How far along the gradient is each face?}
 }
@@ -38,13 +34,8 @@ gradient each face is, and is automatically constrained to lie from 0 to 1.
 By default, \code{scale} is the degree to which each polygon faces the horizontal axis
 orthogonal to the direction the scene object faces.
 
-By default, \code{\link[=light]{light()}} creates a white light, \code{\link[=read_obj]{read_obj()}} and \code{\link[=st_as_obj]{st_as_obj()}}
-create white scene objects, and \code{\link[=point_cloud]{point_cloud()}} creates a transparent scene
-object.
-
-Using \code{\link[=paint]{paint()}} on a point cloud will not affect its appearance. To change
-the colours of a point cloud, the border value must be set, as each point
-is rendered as a polygon.
+By default, \code{\link[=light]{light()}} creates a white light, and \code{\link[=read_obj]{read_obj()}} and \code{\link[=st_as_obj]{st_as_obj()}}
+create white scene objects.
 
 If \code{x} is a scene, \code{paint()} will be applied to every element in the scene.
 }

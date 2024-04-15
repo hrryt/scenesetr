@@ -10,19 +10,11 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// GetKeyboard
-std::vector<char> GetKeyboard();
-RcppExport SEXP _scenesetr_GetKeyboard() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(GetKeyboard());
-    return rcpp_result_gen;
-END_RCPP
-}
+
+RcppExport SEXP _rcpp_module_boot_GLRenderer();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_scenesetr_GetKeyboard", (DL_FUNC) &_scenesetr_GetKeyboard, 0},
+    {"_rcpp_module_boot_GLRenderer", (DL_FUNC) &_rcpp_module_boot_GLRenderer, 0},
     {NULL, NULL, 0}
 };
 

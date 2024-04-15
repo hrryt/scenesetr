@@ -16,13 +16,8 @@
 #' By default, `scale` is the degree to which each polygon faces the horizontal axis 
 #' orthogonal to the direction the scene object faces.
 #' 
-#' By default, [light()] creates a white light, [read_obj()] and [st_as_obj()] 
-#' create white scene objects, and [point_cloud()] creates a transparent scene 
-#' object.
-#' 
-#' Using [paint()] on a point cloud will not affect its appearance. To change 
-#' the colours of a point cloud, the border value must be set, as each point 
-#' is rendered as a polygon. 
+#' By default, [light()] creates a white light, and [read_obj()] and [st_as_obj()] 
+#' create white scene objects.
 #' 
 #' If `x` is a scene, `paint()` will be applied to every element in the scene.
 #' 
@@ -33,38 +28,38 @@
 #' @returns Scene object or light or scene with updated colour.
 #' @export
 
-paint <- function(x, col, scale = x$normals[1, ]) UseMethod("paint")
+paint <- function(x, color, scale = x$normals[1, ]) UseMethod("paint")
 
 #' @export
-paint.scenesetr_obj <- function(x, col, scale = x$normals[1, ]){
-  one_col <- length(col) == 1
-  col <- grDevices::col2rgb(col, alpha = TRUE)
-  if(!one_col){
+paint.scenesetr_obj <- function(x, color, scale = x$normals[1, x$normal_indices[1, ]]){
+  one_color <- length(color) == 1
+  color <- grDevices::col2rgb(color, alpha = TRUE)
+  if(!one_color){
     scale <- restrict(scale)
     scale[is.na(scale)] <- 0.5
-    col <- col[, 1] + (col[, 2] - col[, 1]) %o% scale
+    color <- color[, 1] + (color[, 2] - color[, 1]) %o% scale
   }
-  x$col <- t(col)
+  x$color <- color
   x
 }
 
 restrict <- function(x) (x - min(x)) / (max(x) - min(x))
 
 #' @export
-paint.scenesetr_light <- function(x, col, scale = x$normals[1, ]){
-  x$col <- format_col(col)
+paint.scenesetr_light <- function(x, color, scale = x$normals[1, x$normal_indices[1, ]]){
+  x$color <- format_col(color)
   x
 }
 
 #' @export
-paint.scenesetr_scene <- function(x, col, scale = x$normals[1, ]){
-  x <- lapply(x, paint, col)
+paint.scenesetr_scene <- function(x, color, scale = x$normals[1, x$normal_indices[1, ]]){
+  x <- lapply(x, paint, color)
   class(x) <- "scenesetr_scene"
   x
 }
 
 #' @export
-paint.scenesetr_camera <- function(x, col, scale = x$normals[1, ]){
+paint.scenesetr_camera <- function(x, color, scale = x$normals[1, ]){
   warning("camera returned unpainted")
   x
 }

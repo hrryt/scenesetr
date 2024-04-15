@@ -14,11 +14,11 @@ summary.scenesetr_scene <- function(object, ...){
 
 #' @export
 print.scenesetr_light <- function(x, ...){
-  place <- x$place
-  q <- x$rotation
+  place <- x$position
+  q <- x$orientation
   has_place <- !anyNA(place)
   has_rotation <- !anyNA(q)
-  cat(rgb(t(x$col)))
+  cat(t(rgb(x$color)))
   if(!has_place && !has_rotation) cat(" ambient ")
   if(!has_place &&  has_rotation) cat(" directional ")
   if( has_place && !has_rotation) cat(" point ")
@@ -35,8 +35,8 @@ print.scenesetr_light <- function(x, ...){
 
 #' @export
 print.scenesetr_camera <- function(x, ...){
-  place <- x$place
-  axis <- round(x$rotation %qpq% c(0,0,1), 2)
+  place <- x$position
+  axis <- round(x$orientation %qpq% c(0,0,1), 2)
   cat("camera")
   cat(" at (",place[1],",",place[2],",",place[3],")", sep = "")
   cat(" facing (",axis[1],",",axis[2],",",axis[3],")", sep = "")
@@ -45,11 +45,11 @@ print.scenesetr_camera <- function(x, ...){
 
 #' @export
 print.scenesetr_obj <- function(x, ...){
-  place <- x$place
+  place <- x$position
   unplaced <- anyNA(place)
-  axis <- round(x$rotation %qpq% c(0,0,1), 2)#
+  axis <- round(x$orientation %qpq% c(0,0,1), 2)#
   if(unplaced) cat("unplaced ")
-  if(anyNA(x$col)) cat("unpainted ")
+  if(anyNA(x$color)) cat("unpainted ")
   cat(ncol(x$faces), "poly ")
   cat("object")
   if(!unplaced)

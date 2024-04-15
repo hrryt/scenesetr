@@ -6,33 +6,31 @@
 \usage{
 record(
   x,
-  device = grDevices::dev.new,
-  width = 7,
-  render_order = NULL,
-  lwd = 1,
-  ...
+  width = 1920,
+  height = 1080,
+  save_to_png = FALSE,
+  filename = "Rplot\%05d.png"
 )
 }
 \arguments{
 \item{x}{scene (object of class "scenesetr_scene")
 or recording (object of class "scenesetr_recording")}
 
-\item{device}{function. Graphics device to be used.}
+\item{width}{numeric width of window in pixels}
 
-\item{width}{passed to device function}
+\item{height}{numeric height of window in pixels}
 
-\item{render_order}{optional numeric vector of object indices}
+\item{save_to_png}{logical value. Should every frame be saved as a PNG file?}
 
-\item{lwd}{passed to \code{\link[graphics:polygon]{graphics::polygon()}}}
-
-\item{...}{passed to device function}
+\item{filename}{the path of the output PNG file. The frame number is substituted
+if a C integer format is included in the character string.}
 }
 \value{
 Object of class "scenesetr_recording", invisibly. List of three elements:
 \itemize{
 \item \code{initial_scene}: the original scene passed to \code{record()},
 \item \code{final_scene}: the scene as it was in the last frame before quitting the device,
-\item \code{key_inputs}: a list of key inputs, with one element per frame recorded.
+\item \code{inputs}: a list of key inputs, with one element per frame recorded.
 }
 }
 \description{
@@ -40,29 +38,10 @@ View a scene from the perspective of a camera. Record and replay how behaviours
 play out frame by frame with real-time key inputs from the user.
 }
 \details{
-Only available on Windows due to the method of obtaining key inputs. This
-may change in the future.
+Creates a window displaying a render for each frame. Use Esc to close the window.
 
 Supplying a scene with no camera is an error. A scene with no lights
 or no scene objects will appear blank.
-
-Although key inputs can be used in the behaviours of scene elements, "R" and
-"Q" are reserved for resetting the scene and quitting the device respectively.
-
-\code{x} can be a recording returned from \code{record()} or \code{\link[=record_gif]{record_gif()}},
-in which case, the initial scene and key inputs will be taken from the recording,
-rather than using real-time key inputs.
-
-If \verb{device = }\code{\link[grDevices:dev]{grDevices::dev.new}}, as default, \code{noRStudioGD = TRUE} is set,
-as the RStudio graphics device does not accept arguments such as \code{width} and \code{height}.
-The \code{height} argument passed to the device depends on \code{width} and the aspect of the
-camera.
-
-If \code{render_order} is specified, rendering order is no longer calculated based on
-position in the scene. \code{render_order = 3:1}, for example, ensures only the first
-three objects in the scene are rendered each frame, from last to first.
-
-\code{lwd} specifies the linewidth of polygon borders. See \code{\link[=border]{border()}}.
 }
 \seealso{
 \code{\link[=scene]{scene()}}, \code{\link[=read_obj]{read_obj()}}, \code{\link[=record_gif]{record_gif()}}.

@@ -12,7 +12,7 @@
 #' normal indices of each face in the first row.
 #' 
 #' If no face normals or face normal indices are found, they will be added 
-#' by [add_normals].
+#' by [add_normals()].
 #' 
 #' All returned scene objects are painted white, unplaced, 
 #' have no behaviours and face the positive z direction.
@@ -37,7 +37,7 @@ read_obj <- function(file, take_first = TRUE){
   objects <- vector("list", n_objects)
   
   starts <- which(starts)
-  ends <- c(tail(starts, -1), ncol(m))
+  ends <- c(starts[-1], ncol(m))
   
   objects <- .mapply(m2obj, list(starts + 1, ends), list(m))
   names(objects) <- m[2, starts]
@@ -58,7 +58,6 @@ m2obj <- function(start, end, m){
     colSums(is_na) != nrow(pts),
     drop = FALSE
   ]
-  pts <- rbind(pts, 1)
   
   n <- m[1, ] == "vn"
   has_normals <- any(n, na.rm = TRUE)
@@ -78,40 +77,35 @@ m2obj <- function(start, end, m){
   
   faces <- m[-1, m[1, ] == "f", drop = FALSE]
   is_na <- is.na(faces)
-  faces <- faces[
+  raw_faces <- faces[
     rowSums(is_na) != ncol(faces),
     colSums(is_na) != nrow(faces),
     drop = FALSE
   ]
+  faces <- raw_faces
+  
+  normal_indices <- NA_integer_
+  
   if(any(grepl("/", faces))){
-    
-    reg <- regexpr(".*?(?=/)", faces, perl = TRUE)
-    replace <- as.numeric(regmatches(faces, reg))
-    out <- rep(NA, length(reg))
-    out[!is.na(reg)] <- replace
-    out <- out - min(out, na.rm = TRUE) + 1
-    faces_1 <- faces[1, ]
-    faces <- matrix(out, nrow = nrow(faces))
-    if(has_normals){
-      reg <- regexpr("([^/]*$)", faces_1, perl = TRUE)
-      out <- rep(NA, length(reg))
-      out[!is.na(reg)] <- as.numeric(regmatches(faces_1, reg))
-      out <- out - min(out, na.rm = TRUE) + 1
-      faces <- rbind(out, faces)
-    } else faces <- rbind(NA, faces)
-    
-  } else {
-    
-    if(has_normals){
-      warning("normals found but no normal indices found; overwriting normals")
-      has_normals <- FALSE
-    }
-    faces <- rbind(NA, faces)
-    
+    faces <- extract_from(raw_faces, ".*?(?=/)")
+    if(has_normals) normal_indices <- extract_from(raw_faces, "([^/]*$)")
+  } else if(has_normals){
+    warning("normals found but no normal indices found; overwriting normals")
+    has_normals <- FALSE
   }
   mode(faces) <- "integer"
+  mode(normal_indices) <- "integer"
   
-  out <- paint(obj(pts, normals, faces), "white")
-  if(!has_normals) return(add_normals(out))
-  out
+  x <- paint(obj(positions = pts, normals = normals, normal_indices = normal_indices, indices = faces), "white")
+  if(!has_normals) x <- add_normals(x)
+  triangulate(x)
+}
+
+extract_from <- function(faces, pattern){
+  reg <- regexpr(pattern, faces, perl = TRUE)
+  replace <- as.numeric(regmatches(faces, reg))
+  out <- rep(NA, length(reg))
+  out[!is.na(reg)] <- replace
+  out <- out - min(out, na.rm = TRUE) + 1
+  matrix(out, nrow = nrow(faces))
 }

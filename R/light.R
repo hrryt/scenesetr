@@ -21,53 +21,25 @@
 #' 
 #' `direction` will be normalised to a 3-D vector of unit length.
 #' 
-#' @inheritParams grDevices::col2rgb
 #' @inheritParams camera
+#' @param color passed to [grDevices::col2rgb()]
 #' @returns Object of class "scenesetr_light".
 #' @seealso [camera()], [scene()].
 #' @export
 
 light <- function(
-    col = "white",
-    place = NA,
+    position = NA,
     direction = NA,
-    behaviours = list()){
-  col <- format_col(col)
-  place <- format_place(place)
-  rotation <- dir2q(direction)
-  validate_light(new_light(col, place, rotation, behaviours))
-}
-
-new_light <- function(
-    col = double(),
-    place = double(),
-    rotation = double(),
-    behaviours = list()){
-  stopifnot(
-    is.double(col),
-    is.double(place),
-    is.double(rotation),
-    is.list(behaviours)
-  )
+    color = "white"){
+  color <- format_col(color)
+  position <- format_place(position)
+  orientation <- dir2q(direction)
   x <- list(
-    col = col,
-    place = place,
-    rotation = rotation,
-    behaviours = behaviours
+    position = position,
+    orientation = orientation,
+    behaviours = list(),
+    color = color
   )
   class(x) <- "scenesetr_light"
-  x
-}
-
-validate_light <- function(x){
-  stopifnot(
-    "`x` must have one `col` of length 3" = length(x$col) == 3,
-    "`x` `place` must be length 4 or NA" = length(x$place) == 4 || anyNA(x$place),
-    "The fourth value of the `place` of `x` must be 1" = x$place[4] == 1 || anyNA(x$place),
-    "`x` must have one `rotation` of length 4 or NA" = length(x$rotation) == 4 || anyNA(x$rotation),
-    "The `rotation` of `x` must be a normalised quaternion or NA" = sum(x$rotation^2) == 1 || anyNA(x$rotation),
-    "`x` `behaviours` must be a list of functions" = all(sapply(x$behaviours, is.function)),
-    "`x` `behaviours` must be a named list" = !any(unnamed(x$behaviours))
-  )
   x
 }

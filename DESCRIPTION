@@ -3,18 +3,20 @@ Type: Package
 Title: Construct and Render Interactive 3-Dimensional Scenes
 Version: 1.0
 Date: 2023-11-22
-Description: Interactively explore and animate custom 3-D scenes. Define behaviours of lights, cameras and objects in response to key inputs and each other, and record scenes as they pan out in real time. For a complete list of functions, use `library(help = "scenesetr")`.
+Description: Interactively explore and animate custom 3-D scenes. Define behaviours of lights, cameras and objects in response to key inputs and each other, and record scenes as they pan out in real time. For a complete list of functions, use `help(package = "scenesetr")`.
 License: MIT + file LICENSE
 Imports: 
     rlang,
-    Rcpp (>= 1.0.11)
+    Rcpp (>= 1.0.11),
+    methods,
+    grDevices
 LinkingTo: Rcpp
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Encoding: UTF-8
 Authors@R: c(
   person("Harry", "Thompson", email = "harry@mayesfield.uk", role = c("cre", "aut")),
-  person("Oliver", "Carter-Bones", role = "ctb"))
+  person("Oliver", "Carter-Bones", role = "aut"))
 Suggests: 
     sf,
     stars,

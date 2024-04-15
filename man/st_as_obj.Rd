@@ -4,18 +4,18 @@
 \alias{st_as_obj}
 \title{Convert Raster to Scene Object}
 \usage{
-st_as_obj(x, col = "white", as_sphere = FALSE, radius = 10, raise = TRUE)
+st_as_obj(x, col = "white", globe = TRUE, radius = 10, relief = TRUE)
 }
 \arguments{
 \item{x}{stars raster object}
 
 \item{col}{passed to \code{\link[=paint]{paint()}} with \code{scale} as the raster attribute}
 
-\item{as_sphere}{logical value indicating if a sphere should be returned}
+\item{globe}{logical value indicating if a spherical object should be returned}
 
-\item{radius}{radius of the sphere if \code{as_sphere = TRUE}}
+\item{radius}{radius of the sphere if \code{globe} is \code{TRUE}}
 
-\item{raise}{logical value indicating if height should be scaled by raster attribute}
+\item{relief}{logical value indicating if height should be scaled by raster attribute}
 }
 \value{
 Scene object (object of class "scenesetr_obj").
@@ -34,7 +34,7 @@ of square polygons, one for each raster cell, with one attribute value per polyg
 The y coordinate of each point is determined by the attribute value of the
 polygon in which it is first encountered.
 
-If \code{as_sphere = TRUE}, the x and y dimensions of the raster are instead taken
+If \code{globe} is \code{TRUE}, the x and y dimensions of the raster are instead taken
 to be longitude and latitude respectively, and are mapped to 3-D cartesian
 coordinated on a sphere with the north pole facing in the positive y direction.
 To ensure x and y are longitude and latitude,

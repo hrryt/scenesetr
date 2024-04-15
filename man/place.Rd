@@ -15,20 +15,20 @@ or light (object of class "scenesetr_light") or scene object (object of class
 3-D (x,y,z) coordinates.}
 }
 \value{
-Scene element or scene with updated location.
+Scene element or scene with updated position.
 }
 \description{
-Set the location of a scene element in 3-D space.
+Set the position of a scene element in 3-D space.
 }
 \details{
 If \code{anyNA(where)}, the scene element will be unplaced. Otherwise,
 \code{where} must be a numeric vector of length three specifying the
-new location of the element in 3-D coordinates (x,y,z).
+new position of the element in 3-D coordinates (x,y,z).
 
 An unplaced element will not be rendered by \code{\link[=record]{record()}}.
 
 If \code{x} is a scene, \code{place()} will be applied to every element in the scene.
 }
 \seealso{
-\code{\link[=move]{move()}}, \code{\link[=location]{location()}}.
+\code{\link[=move]{move()}}, \code{\link[=position]{position()}}.
 }

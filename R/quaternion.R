@@ -60,6 +60,5 @@ conjugate <- function(q){
 
 `%qMq%` <- function(q, M){
   t <- 2 * q %qcrossM% M
-  M[-4, ] <- M[-4, ] + q[1] * t + q %qcrossM% t
-  M
+  M + q[1] * t + q %qcrossM% t
 }

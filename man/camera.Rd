@@ -4,24 +4,14 @@
 \alias{camera}
 \title{Create a Camera}
 \usage{
-camera(
-  place = c(0, 0, 0),
-  direction = c(0, 0, 1),
-  behaviours = list(),
-  fov = 60,
-  aspect = 1
-)
+camera(position = c(0, 0, 0), direction = c(0, 0, 1), fov = 60)
 }
 \arguments{
-\item{place}{numeric vector. 3-D (x,y,z) coordinates}
+\item{position}{numeric vector. 3-D (x,y,z) coordinates}
 
 \item{direction}{numeric vector. 3-D (x,y,z) coordinates}
 
-\item{behaviours}{named list of behaviour functions}
-
 \item{fov}{numeric value. Field of view in degrees.}
-
-\item{aspect}{numeric value. Aspect ratio.}
 }
 \value{
 Object of class "scenesetr_camera".
@@ -34,9 +24,9 @@ a camera allows the user to view the scene from the viewpoint of the camera.
 \code{direction} will be normalised to a 3-D vector of unit length.
 
 Default arguments return a camera at the origin facing the positive
-z direction, with a sixty degree field of view, 1:1 aspect ratio and no
+z direction, with a sixty degree field of view and no
 behaviour.
 }
 \seealso{
-\code{\link[=fov]{fov()}}, \code{\link[=aspect]{aspect()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
+\code{\link[=fov]{fov()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
 }

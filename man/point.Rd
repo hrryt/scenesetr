@@ -25,10 +25,11 @@ upright, or, if \code{rotate_to} is \code{TRUE}, ensuring it takes one rotation 
 an axis to transition from its current orientation to the specified direction.
 }
 \details{
-The rotation of a scene element is stored as a quaternion.
+The orientation of a scene element is stored as a quaternion describing the
+rotation required to orient the object from its original orientation.
+The original orientation of a scene element is facing the positive z direction.
 
-The 3-D \code{direction} vector is normalised to unit length, and a quaternion is
-assigned to the scene element describing its new rotation to face the direction.
+The 3-D \code{direction} vector is normalised to unit length.
 
 By default, \code{point()} assigns a rotation quaternion with no roll, ensuring the
 element is upright once rotated to face the direction. Alternatively, if
@@ -45,5 +46,5 @@ given is \code{c(0,0,0)}, the element is set to face the positive z direction.
 If \code{x} is a scene, \code{point()} will be applied to every element in the scene.
 }
 \seealso{
-\code{\link[=direction]{direction()}}, \code{\link[=rotate]{rotate()}}, \code{\link[=rotation]{rotation()}}, \code{\link[=looked_at]{looked_at()}}, \code{\link[=skewer]{skewer()}}.
+\code{\link[=direction]{direction()}}, \code{\link[=rotate]{rotate()}}, \code{\link[=orientation]{orientation()}}, \code{\link[=looked_at]{looked_at()}}, \code{\link[=skewer]{skewer()}}.
 }

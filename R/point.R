@@ -5,10 +5,11 @@
 #' an axis to transition from its current orientation to the specified direction.
 #' 
 #' @details
-#' The rotation of a scene element is stored as a quaternion.
+#' The orientation of a scene element is stored as a quaternion describing the 
+#' rotation required to orient the object from its original orientation. 
+#' The original orientation of a scene element is facing the positive z direction.
 #' 
-#' The 3-D `direction` vector is normalised to unit length, and a quaternion is 
-#' assigned to the scene element describing its new rotation to face the direction.
+#' The 3-D `direction` vector is normalised to unit length.
 #' 
 #' By default, `point()` assigns a rotation quaternion with no roll, ensuring the 
 #' element is upright once rotated to face the direction. Alternatively, if 
@@ -29,14 +30,14 @@
 #' @param rotate_to logical value indicating whether the element should be 
 #' rotated to its new direction from its current orientation.
 #' @returns Scene element or scene with updated rotation.
-#' @seealso [direction()], [rotate()], [rotation()], [looked_at()], [skewer()].
+#' @seealso [direction()], [rotate()], [orientation()], [looked_at()], [skewer()].
 #' @export
 
 point <- function(x, direction, rotate_to = FALSE) UseMethod("point")
 
 #' @export
 point.default <- function(x, direction, rotate_to = FALSE){
-  x$rotation <- if(rotate_to) direction(x) %to% direction %q% x$rotation else dir2q(direction)
+  x$orientation <- if(rotate_to) direction(x) %to% direction %q% x$orientation else dir2q(direction)
   x
 }
 

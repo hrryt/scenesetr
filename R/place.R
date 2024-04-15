@@ -1,11 +1,11 @@
 #' Place a Scene Element
 #' 
-#' Set the location of a scene element in 3-D space.
+#' Set the position of a scene element in 3-D space.
 #' 
 #' @details
 #' If `anyNA(where)`, the scene element will be unplaced. Otherwise, 
 #' `where` must be a numeric vector of length three specifying the 
-#' new location of the element in 3-D coordinates (x,y,z).
+#' new position of the element in 3-D coordinates (x,y,z).
 #' 
 #' An unplaced element will not be rendered by [record()].
 #' 
@@ -14,15 +14,15 @@
 #' @inheritParams behaves
 #' @param where numeric vector or an R object containing `NA`. 
 #' 3-D (x,y,z) coordinates.
-#' @returns Scene element or scene with updated location.
-#' @seealso [move()], [location()].
+#' @returns Scene element or scene with updated position.
+#' @seealso [move()], [position()].
 #' @export
 
 place <- function(x, where) UseMethod("place")
 
 #' @export
 place.default <- function(x, where){
-  x$place <- format_place(where)
+  x$position <- format_place(where)
   x
 }
 
@@ -36,5 +36,5 @@ place.scenesetr_scene <- function(x, where){
 format_place <- function(place){
   if(anyNA(place)) return(NA_real_)
   stopifnot("place must be length 3 or NA" = length(place) == 3)
-  c(place, 1)
+  place
 }

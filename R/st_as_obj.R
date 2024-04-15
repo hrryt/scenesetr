@@ -13,7 +13,7 @@
 #' The y coordinate of each point is determined by the attribute value of the 
 #' polygon in which it is first encountered.
 #' 
-#' If `as_sphere = TRUE`, the x and y dimensions of the raster are instead taken 
+#' If `globe` is `TRUE`, the x and y dimensions of the raster are instead taken 
 #' to be longitude and latitude respectively, and are mapped to 3-D cartesian 
 #' coordinated on a sphere with the north pole facing in the positive y direction. 
 #' To ensure x and y are longitude and latitude, 
@@ -29,18 +29,18 @@
 #' 
 #' @param x stars raster object
 #' @param col passed to [paint()] with `scale` as the raster attribute
-#' @param as_sphere logical value indicating if a sphere should be returned
-#' @param radius radius of the sphere if `as_sphere = TRUE`
-#' @param raise logical value indicating if height should be scaled by raster attribute 
+#' @param globe logical value indicating if a spherical object should be returned
+#' @param radius radius of the sphere if `globe` is `TRUE`
+#' @param relief logical value indicating if height should be scaled by raster attribute 
 #' @returns Scene object (object of class "scenesetr_obj").
 #' @seealso [read_obj()], [scene()], [record()].
 #' @export
 st_as_obj <- function(
-    x, col = "white", as_sphere = FALSE, radius = 10, raise = TRUE) UseMethod("st_as_obj")
+    x, col = "white", globe = TRUE, radius = 10, relief = TRUE) UseMethod("st_as_obj")
 
 #' @export
 st_as_obj.stars <- function(
-    x, col = "white", as_sphere = FALSE, radius = 10, raise = TRUE){
+    x, col = "white", globe = TRUE, radius = 10, relief = TRUE){
   
   rlang::check_installed(
     c("stars", "sf"), reason = "to use `stars:::st_as_sf.stars()`, 
@@ -48,7 +48,7 @@ st_as_obj.stars <- function(
   )
   
   x <- sf::st_as_sf(x)
-  if(as_sphere) x <- sf::st_transform(x, "EPSG:4326")
+  if(globe) x <- sf::st_transform(x, "EPSG:4326")
   coords <- coord_2(lapply(sf::st_geometry(x), `[[`, 1))
   coords <- coords[duplicated(coords[, "L1"]), ]
   
@@ -59,31 +59,35 @@ st_as_obj.stars <- function(
   face_index <- coords[, "L1"]
   sides <- rle(face_index)$lengths
   
-  faces <- matrix(NA_integer_, max(sides) + 1, max(face_index))
-  faces[cbind(sequence(sides) + 1, face_index)] <- point_index
+  faces <- matrix(NA_integer_, max(sides), max(face_index))
+  faces[cbind(sequence(sides), face_index)] <- point_index
   
   coords <- coords[uniques, ]
   scale <- as.numeric(sf::st_drop_geometry(x)[[1]])
   x <- coords[, 1]
   y <- coords[, 2]
-  point_scale <- if(raise) scale[coords[, "L1"]] else 0
+  point_scale <- if(relief) scale[coords[, "L1"]] else 0
   
-  if(!as_sphere){
-    points <- rbind(x, point_scale, y, 1)
-    return(paint(add_normals(obj(pts = points, faces = faces)), col, scale))
+  if(!globe){
+    points <- rbind(x, point_scale, y)
+    return(make_globe(points, faces, col, scale))
   }
   
   lon <- x / 180
   lat <- y / 180
-  x <- cospi(lat) * cospi(lon)
+  x <- -cospi(lat) * cospi(lon)
   z <- cospi(lat) * sinpi(lon)
   y <- sinpi(lat)
-  points <- cbind(x, y, z, 1)
+  points <- cbind(x, y, z)
   points[, -4] <- points[, -4] * (radius + point_scale)
   points <- t(points)
-  paint(add_normals(obj(pts = points, faces = faces)), col, scale)
+  make_globe(points, faces, col, scale)
 }
 
 coord_2 <- function(x){
   cbind(do.call(rbind, x), L1 = rep(seq_along(x), times = vapply(x, nrow, 0L)))
+}
+
+make_globe <- function(positions, indices, col, scale){
+  paint(triangulate(obj(positions = positions, indices = indices)), col, scale)
 }

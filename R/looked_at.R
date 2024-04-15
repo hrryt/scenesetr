@@ -4,11 +4,11 @@
 #' angle of observation.
 #' 
 #' @details
-#' Tests whether the location of the `lookee` is within a cone from the location 
+#' Tests whether the position of the `lookee` is within a cone from the position 
 #' of the `looker` in the direction of the `looker` with a specified threshold 
 #' `angle` from the line of sight of the `looker`.
 #' 
-#' The location and direction of an element can be queried with [location()] and 
+#' The position and direction of an element can be queried with [position()] and 
 #' [direction()] respectively.
 #' 
 #' Useful in defining behaviours on sight or interaction.
@@ -25,7 +25,7 @@
 
 looked_at <- function(lookee, looker, angle = 15){
   x <- direction(looker)
-  y <- location(lookee) - location(looker)
+  y <- position(lookee) - position(looker)
   out <- sum(x * y) > cospi(angle/180) * sqrt(sum(x^2, y^2))
   if(is.na(out)) return(FALSE)
   out

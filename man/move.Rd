@@ -15,15 +15,15 @@ or light (object of class "scenesetr_light") or scene object (object of class
 3-D (x,y,z) coordinates.}
 }
 \value{
-Scene element or scene with updated location.
+Scene element or scene with updated position.
 }
 \description{
-Change the location of a scene element relative to its current location.
+Change the position of a scene element relative to its current position.
 }
 \details{
 If \code{anyNA(translation)}, the scene element will be unplaced. Otherwise,
 \code{translation} must be a numeric vector of length three specifying the change
-in location along each of the basis axes (x,y,z).
+in position along each of the basis axes (x,y,z).
 
 If the scene element is already unplaced, \code{move()} will return the
 element unmodified.
@@ -33,5 +33,5 @@ An unplaced element will not be rendered by \code{\link[=record]{record()}}.
 If \code{x} is a scene, \code{move()} will be applied to every element in the scene.
 }
 \seealso{
-\code{\link[=place]{place()}}, \code{\link[=location]{location()}}.
+\code{\link[=place]{place()}}, \code{\link[=position]{position()}}.
 }

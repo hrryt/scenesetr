@@ -4,20 +4,14 @@
 \alias{light}
 \title{Create a Light}
 \usage{
-light(col = "white", place = NA, direction = NA, behaviours = list())
+light(position = NA, direction = NA, color = "white")
 }
 \arguments{
-\item{col}{vector of any of the three kinds of \R color specifications,
-    i.e., either a color name (as listed by \code{\link[grDevices]{colors}()}), a
-    hexadecimal string of the form \code{"#rrggbb"} or
-    \code{"#rrggbbaa"} (see \code{\link[grDevices]{rgb}}), or a positive integer
-    \code{i} meaning \code{\link[grDevices]{palette}()[i]}.}
-
-\item{place}{numeric vector. 3-D (x,y,z) coordinates}
+\item{position}{numeric vector. 3-D (x,y,z) coordinates}
 
 \item{direction}{numeric vector. 3-D (x,y,z) coordinates}
 
-\item{behaviours}{named list of behaviour functions}
+\item{color}{passed to \code{\link[grDevices:col2rgb]{grDevices::col2rgb()}}}
 }
 \value{
 Object of class "scenesetr_light".

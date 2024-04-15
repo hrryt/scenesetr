@@ -6,6 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+This is an incomplete branch of scenesetr. See the master branch.
+
 The goal of scenesetr is to allow R users to interactively explore and
 animate custom 3-D scenes. scenesetr provides intuitive tools to define
 behaviours of lights, cameras and objects in response to key inputs and

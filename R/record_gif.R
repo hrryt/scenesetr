@@ -24,30 +24,27 @@
 #' @export
 
 record_gif <- function(
-    x, gif_file = "animation.gif", width = 800,
-    delay = 1/30, loop = TRUE, progress = TRUE, 
-    render_order = NULL, lwd = 1, ...){
+    x, gif_file = "animation.gif", width = 800, height = 600,
+    delay = 1/30, loop = TRUE, progress = TRUE){
   
   rlang::check_installed("gifski", reason = "to use gifski()")
+  
   imgdir <- tempfile("tmppng")
   dir.create(imgdir)
   on.exit(unlink(imgdir, recursive = TRUE))
+  
   filename <- file.path(imgdir, "tmpimg_%05d.png")
   
   recording <- record(
-    x, device = grDevices::png, width = width, render_order = render_order, 
-    lwd = lwd, filename = filename, ...)
+    x, width = width, height = height, save_to_png = TRUE, filename = filename
+  )
+  
   images <- list.files(imgdir, pattern = "tmpimg_\\d{5}.png", full.names = TRUE)
   
-  camera <- get_camera(x)
-  height <- width / camera$aspect
   gifski::gifski(
     images, gif_file = gif_file, width = width, height = height,
     delay = delay, loop = loop, progress = progress
   )
+  
   invisible(recording)
 }
-
-get_camera <- function(x) UseMethod("get_camera")
-get_camera.scenesetr_scene <- function(x) x[sapply(x, inherits, "scenesetr_camera")][[1]]
-get_camera.scenesetr_recording <- function(x) get_camera(x$initial_scene)

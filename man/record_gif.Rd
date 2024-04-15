@@ -8,12 +8,10 @@ record_gif(
   x,
   gif_file = "animation.gif",
   width = 800,
+  height = 600,
   delay = 1/30,
   loop = TRUE,
-  progress = TRUE,
-  render_order = NULL,
-  lwd = 1,
-  ...
+  progress = TRUE
 )
 }
 \arguments{
@@ -24,18 +22,14 @@ or recording (object of class "scenesetr_recording")}
 
 \item{width}{gif width in pixels}
 
+\item{height}{gif height in pixel}
+
 \item{delay}{time to show each image in seconds}
 
 \item{loop}{if the gif should be repeated. Set to FALSE to only play
 once, or a number to indicate how many times to repeat after the first.}
 
 \item{progress}{print some verbose status output}
-
-\item{render_order}{optional numeric vector of object indices}
-
-\item{lwd}{passed to \code{\link[graphics:polygon]{graphics::polygon()}}}
-
-\item{...}{other graphical parameters passed to \link{png}}
 }
 \value{
 Object of class "scenesetr_recording", invisibly. List of three elements:

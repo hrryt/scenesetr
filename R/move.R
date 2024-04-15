@@ -1,11 +1,11 @@
 #' Move a Scene Element
 #' 
-#' Change the location of a scene element relative to its current location.
+#' Change the position of a scene element relative to its current position.
 #' 
 #' @details
 #' If `anyNA(translation)`, the scene element will be unplaced. Otherwise, 
 #' `translation` must be a numeric vector of length three specifying the change 
-#' in location along each of the basis axes (x,y,z).
+#' in position along each of the basis axes (x,y,z).
 #' 
 #' If the scene element is already unplaced, `move()` will return the 
 #' element unmodified.
@@ -17,20 +17,20 @@
 #' @inheritParams behaves
 #' @param translation numeric vector or an R object containing `NA`. 
 #' 3-D (x,y,z) coordinates.
-#' @returns Scene element or scene with updated location.
-#' @seealso [place()], [location()].
+#' @returns Scene element or scene with updated position.
+#' @seealso [place()], [position()].
 #' @export
 
 move <- function(x, translation) UseMethod("move")
 
 #' @export
 move.default <- function(x, translation){
-  if(anyNA(translation)) x$place <- NA_real_
-  if(anyNA(x$place)) return(x)
+  if(anyNA(translation)) x$position <- NA_real_
+  if(anyNA(x$position)) return(x)
   stopifnot(
     "translation must be length 3 vector or NA" = length(translation) == 3
   )
-  x$place[-4] <- x$place[-4] + translation
+  x$position[-4] <- x$position + translation
   x
 }
 

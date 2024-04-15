@@ -95,23 +95,23 @@ An element with the \code{pushable} behaviour can be pushed horizontally by a pl
 
 An element with the \code{bullet} behaviour will 'break' any element with the \code{fragile}
 behaviour once in range, upon which the bullet element will be unplaced.
-The element can be fired from a player using the 'E' key. 'breaking' an
+The element can be fired from a player using the 'e' key. 'breaking' an
 element removes all its behaviours except for those named \code{pushable}, and
 points the element upwards.
 
 An element with the \code{wasd} behaviour can be moved forward and backward with
-the 'W' and 'S' keys, and can be rotated left and right with the 'A' and 'D'
+the 'w' and 's' keys, and can be rotated left and right with the 'a' and 'd'
 keys. The \code{arrow_keys} behaviours allows the same control except using the arrow
 keys.
 
 An element with the \code{follow} behaviour follows behind and above a player, with
-the same rotation as the player except for a thirty degree negative pitch.
+the same orientation as the player except for a thirty degree negative pitch.
 
 An element with the \code{float_behind} behaviour floats behind and above a player
-with a delayed effect and the same rotation as the player.
+with a delayed effect and the same orientation as the player.
 
 An element with the \code{jump} behaviour can jump vertically from a horizontal
-floor defined by the initial location of the object when the ' ' key is held.
+floor defined by the initial position of the object when the ' ' key is held.
 
 An element with the \code{tilt} behaviour can tilt down and up
 on the press of keys '1' and '2' respectively.

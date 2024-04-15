@@ -23,23 +23,23 @@
 #' 
 #' An element with the `bullet` behaviour will 'break' any element with the `fragile` 
 #' behaviour once in range, upon which the bullet element will be unplaced.
-#' The element can be fired from a player using the 'E' key. 'breaking' an 
+#' The element can be fired from a player using the 'e' key. 'breaking' an 
 #' element removes all its behaviours except for those named `pushable`, and 
 #' points the element upwards.
 #' 
 #' An element with the `wasd` behaviour can be moved forward and backward with 
-#' the 'W' and 'S' keys, and can be rotated left and right with the 'A' and 'D' 
+#' the 'w' and 's' keys, and can be rotated left and right with the 'a' and 'd' 
 #' keys. The `arrow_keys` behaviours allows the same control except using the arrow 
 #' keys.
 #' 
 #' An element with the `follow` behaviour follows behind and above a player, with 
-#' the same rotation as the player except for a thirty degree negative pitch.
+#' the same orientation as the player except for a thirty degree negative pitch.
 #' 
 #' An element with the `float_behind` behaviour floats behind and above a player 
-#' with a delayed effect and the same rotation as the player.
+#' with a delayed effect and the same orientation as the player.
 #' 
 #' An element with the `jump` behaviour can jump vertically from a horizontal 
-#' floor defined by the initial location of the object when the ' ' key is held.
+#' floor defined by the initial position of the object when the ' ' key is held.
 #' 
 #' An element with the `tilt` behaviour can tilt down and up
 #' on the press of keys '1' and '2' respectively.
@@ -78,7 +78,7 @@ spin <- function(axis, angle, quit_after_cycle = FALSE){
 #' @rdname spin
 #' @export
 quit_after_frame <- function(element, frame, ...){
-  if(frame == 2) return(quit_device("One frame rendered\n"))
+  if(frame == 1) return(quit_device("One frame rendered\n"))
   element
 }
 
@@ -87,16 +87,16 @@ quit_after_frame <- function(element, frame, ...){
 boid <- function(element, scene, ...){
   initial(element$velocity) <- c(0,0,0)
   boids <- scene[scene %behaves% boid]
-  location_element <- location(element)
-  locations <- sapply(boids, location)
+  position_element <- position(element)
+  positions <- sapply(boids, position)
   velocities <- sapply(boids, \(boid) boid$velocity %||% c(0,0,0))
   close <- sapply(boids, in_range, element, 10)
   velocity <- element$velocity +
-    0.01 * (rowMeans(locations) - location_element) +
+    0.01 * (rowMeans(positions) - position_element) +
     0.15 * (rowMeans(velocities) - element$velocity) +
-    0.50 * (location_element - rowMeans(locations[, close, drop = FALSE]))
-  velocity[location_element > 200] <- -5
-  velocity[location_element < -200] <- 5
+    0.50 * (position_element - rowMeans(positions[, close, drop = FALSE]))
+  velocity[position_element > 200] <- -5
+  velocity[position_element < -200] <- 5
   element$velocity <- velocity
   direction(element) <- velocity
   move(element, velocity)
@@ -117,9 +117,9 @@ excited <- function(element, scene, ...){
 pushable <- function(element, scene, ...){
   player <- scene[scene %behaves% wasd][[1]]
   if(!in_range(player, element, 10)) return(element)
-  y <- location(element)[2]
-  element <- move(element, 0.15 * (location(element) - location(player)))
-  location(element)[2] <- y
+  y <- position(element)[2]
+  element <- move(element, 0.15 * (position(element) - position(player)))
+  position(element)[2] <- y
   element
 }
 
@@ -130,9 +130,9 @@ bullet <- function(element, scene, keys, ...){
   bullet <- scene %behaves% bullet
   objs <- scene[sapply(scene, inherits, "scenesetr_obj") & !(player | bullet)]
   player <- scene[player][[1]]
-  if("E" %in% keys){
-    rotation(element) <- rotation(player)
-    location(element) <- location(player)
+  if("e" %in% keys){
+    orientation(element) <- orientation(player)
+    position(element) <- position(player)
   }
   hit <- any(sapply(objs, in_range, element, 10))
   if(hit || !in_range(player, element, 50)) return(place(element, NA))
@@ -154,10 +154,10 @@ fragile <- function(element, scene, ...){
 wasd <- function(element, keys, ...){
   for(key in keys) switch(
     key,
-    W = element <- move(element, direction(element)),
-    S = element <- move(element, -direction(element)),
-    A = element <- rotate(element, "left", 4),
-    D = element <- rotate(element, "right", 4)
+    w = element <- move(element, direction(element)),
+    s = element <- move(element, -direction(element)),
+    a = element <- rotate(element, "left", 2),
+    d = element <- rotate(element, "right", 2)
   )
   element
 }
@@ -169,8 +169,8 @@ arrow_keys <- function(element, keys, ...){
     key,
     up = element <- move(element, direction(element)),
     down = element <- move(element, -direction(element)),
-    left = element <- rotate(element, "left", 4),
-    right = element <- rotate(element, "right", 4)
+    left = element <- rotate(element, "left", 2),
+    right = element <- rotate(element, "right", 2)
   )
   element
 }
@@ -179,9 +179,9 @@ arrow_keys <- function(element, keys, ...){
 #' @export
 follow <- function(element, scene, ...){
   player <- scene[scene %behaves% wasd][[1]]
-  location(element) <- location(player) - 10 *
+  position(element) <- position(player) - 10 *
     (2 * direction(player) + skewer(player, "up"))
-  rotation(element) <- rotation(player)
+  orientation(element) <- orientation(player)
   rotate(element, "down", 30)
 }
 
@@ -189,21 +189,21 @@ follow <- function(element, scene, ...){
 #' @export
 float_behind <- function(element, scene, ...){
   player <- scene[scene %behaves% wasd][[1]]
-  to_player <- location(player) - location(element)
-  rotation(element) <- rotation(player)
+  to_player <- position(player) - position(element)
+  orientation(element) <- orientation(player)
   move(element, 0.1 * to_player - 2 * direction(player) + skewer(player, "up"))
 }
 
 #' @rdname spin
 #' @export
 jump <- function(element, keys, ...){
-  initial(element$floor) <- location(element)[2]
+  initial(element$floor) <- position(element)[2]
   initial(element$velocity) <- 0
   floor <- element$floor
   velocity <- element$velocity
-  y <- location(element)[2]
+  y <- position(element)[2]
   if(y < floor){
-    location(element)[2] <- floor
+    position(element)[2] <- floor
   } else {
     velocity <- if(y == floor) if(any(keys == " ")) 1 else 0 else
       velocity - 0.1

@@ -20,9 +20,9 @@ Logical value indicating whether the elements are in range.
 Test whether two scene elements are within a specified distance in 3-D space.
 }
 \details{
-Tests whether the distance between the point locations of elements is less
+Tests whether the distance between the positions of two elements is less
 than a threshold distance specified by \code{range}.
-The location of an element can be queried with \code{\link[=location]{location()}}.
+The position of an element can be queried with \code{\link[=position]{position()}}.
 
 Useful in defining collision behaviours.
 
