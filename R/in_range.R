@@ -3,11 +3,11 @@
 #' Test whether two scene elements are within a specified distance in 3-D space.
 #' 
 #' @details
-#' Tests whether the distance between the point locations of elements is less 
+#' Tests whether the distance between the positions of two elements is less 
 #' than a threshold distance specified by `range`. 
-#' The location of an element can be queried with [location()].
+#' The position of an element can be queried with [position()].
 #' 
-#' Useful in defining collision behaviours.
+#' Useful in defining collision behaviors.
 #' 
 #' If an element is unplaced, `in_range()` will return `FALSE`.
 #' 
@@ -19,8 +19,8 @@
 #' @seealso [looked_at()], [behave()], [spin()].
 #' @export
 
-in_range <- function(x, y, range){
-  out <- sqrt(sum((location(x) - location(y))^2)) < range
+in_range <- function(x, y, range) {
+  out <- sqrt(sum((position(x) - position(y))^2)) < range
   if(is.na(out)) return(FALSE)
   out
 }

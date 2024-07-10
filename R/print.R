@@ -1,5 +1,5 @@
 #' @export
-summary.scenesetr_scene <- function(object, ...){
+summary.scenesetr_scene <- function(object, ...) {
   num_objects <- sum(sapply(object, inherits, "scenesetr_obj"))
   num_lights <- sum(sapply(object, inherits, "scenesetr_light"))
   num_cameras <- sum(sapply(object, inherits, "scenesetr_camera"))
@@ -13,12 +13,12 @@ summary.scenesetr_scene <- function(object, ...){
 }
 
 #' @export
-print.scenesetr_light <- function(x, ...){
-  place <- x$place
-  q <- x$rotation
+print.scenesetr_light <- function(x, ...) {
+  place <- position(x)
+  dir <- direction(x)
   has_place <- !anyNA(place)
-  has_rotation <- !anyNA(q)
-  cat(rgb(t(x$col)))
+  has_rotation <- !anyNA(dir)
+  cat(grDevices::rgb(t(x$color / 255)))
   if(!has_place && !has_rotation) cat(" ambient ")
   if(!has_place &&  has_rotation) cat(" directional ")
   if( has_place && !has_rotation) cat(" point ")
@@ -26,17 +26,17 @@ print.scenesetr_light <- function(x, ...){
   cat("light")
   if(has_place)
     cat(" at (",place[1],",",place[2],",",place[3],")", sep = "")
-  if(has_rotation){
-    axis <- round(q %qpq% c(0,0,1), 2)
+  if(has_rotation) {
+    axis <- round(dir, 2)
     cat(" facing (",axis[1],",",axis[2],",",axis[3],")", sep = "")
   }
   cat("\n")
 }
 
 #' @export
-print.scenesetr_camera <- function(x, ...){
-  place <- x$place
-  axis <- round(x$rotation %qpq% c(0,0,1), 2)
+print.scenesetr_camera <- function(x, ...) {
+  place <- position(x)
+  axis <- round(direction(x), 2)
   cat("camera")
   cat(" at (",place[1],",",place[2],",",place[3],")", sep = "")
   cat(" facing (",axis[1],",",axis[2],",",axis[3],")", sep = "")
@@ -44,13 +44,13 @@ print.scenesetr_camera <- function(x, ...){
 }
 
 #' @export
-print.scenesetr_obj <- function(x, ...){
-  place <- x$place
+print.scenesetr_obj <- function(x, ...) {
+  place <- position(x)
   unplaced <- anyNA(place)
-  axis <- round(x$rotation %qpq% c(0,0,1), 2)#
+  axis <- round(direction(x), 2)#
   if(unplaced) cat("unplaced ")
-  if(anyNA(x$col)) cat("unpainted ")
-  cat(ncol(x$faces), "poly ")
+  if(anyNA(x$color)) cat("unpainted ")
+  cat(ncol(x$indices), "poly ")
   cat("object")
   if(!unplaced)
     cat(" at (",place[1],",",place[2],",",place[3],")", sep = "")

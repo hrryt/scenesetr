@@ -4,18 +4,36 @@
 \alias{st_as_obj}
 \title{Convert Raster to Scene Object}
 \usage{
-st_as_obj(x, col = "white", as_sphere = FALSE, radius = 10, raise = TRUE)
+st_as_obj(
+  x,
+  colors = "white",
+  globe = TRUE,
+  radius = 10,
+  max_color_value = 1,
+  use_data_table = TRUE,
+  quit_after_cycle = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{stars raster object}
 
-\item{col}{passed to \code{\link[=paint]{paint()}} with \code{scale} as the raster attribute}
+\item{colors}{passed to \code{\link[=paint]{paint()}} with \code{x$paint} as the \code{scale}}
 
-\item{as_sphere}{logical value indicating if a sphere should be returned}
+\item{globe}{logical; should the returned object be a sphere of the Earth's
+surface based on the \code{\link[sf:st_crs]{sf::st_crs()}} of \code{x}?}
 
-\item{radius}{radius of the sphere if \code{as_sphere = TRUE}}
+\item{radius}{radius of the sphere if \code{globe} is \code{TRUE}}
 
-\item{raise}{logical value indicating if height should be scaled by raster attribute}
+\item{max_color_value}{maximum value of \code{x$paint} or
+\code{x$red}, \code{x$green}, \code{x$blue} and \code{x$alpha}}
+
+\item{use_data_table}{logical; should \code{data.table} be used if installed?}
+
+\item{quit_after_cycle}{logical; if animated, should \code{\link[=quit_device]{quit_device()}} be
+called after completion?}
+
+\item{...}{additional arguments to pass to \code{\link[=paint]{paint()}}.}
 }
 \value{
 Scene object (object of class "scenesetr_obj").
@@ -25,27 +43,35 @@ Convert a stars raster object to a scene object with xz coordinates defined
 by the raster grid and y coordinates defined by a raster attribute.
 }
 \details{
-The raster object is assumed to have 2 dimensions and 1 attribute.
-The x and y dimensions of the raster are mapped onto the x and z axes in 3-D space.
-The attribute of the raster is taken to be the y coordinate at each cell in the xz grid.
+\code{x} must be a raster object with 2 dimensions, x and y, and a number of
+specifically named attributes: Either \code{"paint"} or all of \code{"red"}, \code{"green"}
+and \code{"blue"}, and optionally \code{"relief"} and \code{"alpha"}. If a third dimension,
+\code{"time"}, is provided, a scene object is returned with \code{\link[=behaviors]{behaviors()}} such
+that its color switches each frame, quitting after the latest time if
+\code{quit_after_cycle} is \code{TRUE}.
 
-The raster object is first converted by \code{\link[stars:st_as_sf]{stars::st_as_sf()}} to an sf object
-of square polygons, one for each raster cell, with one attribute value per polygon.
-The y coordinate of each point is determined by the attribute value of the
-polygon in which it is first encountered.
+If \code{x$relief} is not supplied, it set to zero where \code{x$paint}
+or \code{x$red} are not \code{NA}.
 
-If \code{as_sphere = TRUE}, the x and y dimensions of the raster are instead taken
-to be longitude and latitude respectively, and are mapped to 3-D cartesian
-coordinated on a sphere with the north pole facing in the positive y direction.
+If \code{x$red}, \code{x$green} and \code{x$blue} are supplied, each polygon is shaded based
+on these attributes. \code{x$alpha} can additionally be supplied for this purpose.
+Otherwise, \code{\link{paint}}\verb{(*, colors, x$paint, ...)} is called on the scene object.
+If \code{x$paint} is not supplied this will paint the object with the
+first or only of the \code{colors} supplied.
+
+If \code{globe} is \code{FALSE}, the x and y dimensions of the raster are mapped onto
+the x and z axes in 3-D space.
+\code{x$relief} is taken to be the y coordinate at each cell in the xz grid.
+
+If \code{globe} is \code{TRUE}, the x and y dimensions of the raster are instead taken
+to be longitude and latitude respectively, and are mapped to 3-D Cartesian
+coordinated on a sphere with the north pole facing the positive y direction.
 To ensure x and y are longitude and latitude,
 \code{\link[sf:st_transform]{sf::st_transform}}\code{(crs = "EPSG:4326")} is used.
 
-Should a vector of two colours be passed to \code{col}, each polygon will be coloured
-on a gradient between the two colours based on the attribute of the raster.
+Surface normals are added to the scene object after triangulation by \code{\link[=add_normals]{add_normals()}}.
 
-Surface normals are added to the scene object by \code{\link[=add_normals]{add_normals()}}.
-
-The returned scene object is unplaced, has no behaviours and
+The returned scene object is unplaced, has no behaviors and
 faces the positive z direction.
 }
 \seealso{

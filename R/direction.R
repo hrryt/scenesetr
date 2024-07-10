@@ -10,7 +10,7 @@
 #' 
 #' `direction(x) <- value` assigns the result of [`point`]`(x, value)`.
 #' 
-#' @inheritParams behaviours
+#' @inheritParams behaviors
 #' @param value numeric replacement vector. 3-D (x,y,z) coordinates
 #' @returns
 #' For `direction(x)`, the direction vector of the scene element.
@@ -18,11 +18,11 @@
 #' For `direction(x) <- value`, the updated scene element. (Note that the value of 
 #' `direction(x) <- value` is that of the assignment, `value`, not the return 
 #' value from the left-hand side.)
-#' @seealso [point()], [rotate()], [rotation()], [looked_at()], [skewer()].
+#' @seealso [point()], [rotate()], [orientation()], [looked_at()], [skewer()].
 #' @export
 
-direction <- function(x){
-  x$rotation %qpq% c(0,0,1)
+direction <- function(x) {
+  q2dir(orientation(x))
 }
 
 #' @rdname direction

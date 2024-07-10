@@ -28,7 +28,7 @@ Scene elements are stored as lists and so user-defined variables can be
 appended to them using \verb{$<-} and accessed using \code{$}.
 
 \code{initial(element$new_variable) <- value} can be useful in setting the
-\code{value} of a \code{new_variable} at frame zero in the behaviour of an \code{element}.
+\code{value} of a \code{new_variable} at frame zero in the behavior of an \code{element}.
 The new variable can then be accessed in the current and subsequent frames
 using \code{element$new_variable}.
 
@@ -36,7 +36,7 @@ using \code{element$new_variable}.
 \code{function(x, value) if(is.null(x)) value else x}
 }
 \examples{
-count_to_fifty <- function(element, ...){
+count_to_fifty <- function(element, ...) {
   initial(element$counter) <- 0
   print(element$counter)
   if(element$counter == 50) return(game_over("Fifty reached"))
@@ -47,7 +47,7 @@ count_to_fifty <- function(element, ...){
 cam <- behave(camera(), count_to_fifty)
 scene <- scene(cam)
 \dontrun{
-see(scene)
+record(scene)
 }
 }
 \seealso{

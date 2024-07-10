@@ -4,10 +4,12 @@
 \alias{add_normals}
 \title{Write Normals of Scene Object}
 \usage{
-add_normals(x)
+add_normals(x, smooth = FALSE)
 }
 \arguments{
 \item{x}{scene object (object of class "scenesetr_obj")}
+
+\item{smooth}{logical value. Should normals be calculated per point rather than per face?}
 }
 \value{
 Updated scene object.
@@ -17,11 +19,12 @@ Add or edit the surface normal vectors of a scene object.
 }
 \details{
 Uses Newell's method to calculate the normal vector of each polygon.
-The updated normal vectors are stored in \code{x$normals}.
-The index of a normal vector is added to each polygon in the first row of \code{x$faces}.
+If \code{smooth} is \code{TRUE}, each point is assigned a separate normal,
+the mean of the normals of the polygons containing the point.
 
-Used in \link{read_obj} if normals cannot be found, and in \link{st_as_obj}. Useful if
-normals have been misread by \link{read_obj}, for example in the case that vertex
-normals rather than surface normals are supplied in the .obj file. Also useful
-if points or faces have been modified after scene object creation.
+The updated normal vectors are stored in \code{x$normals}.
+The index of the normal of each point in a face is stored in \code{x$normal_indices}.
+
+Used in \code{\link[=read_obj]{read_obj()}} if normals cannot be found, and in \code{\link[=st_as_obj]{st_as_obj()}}.
+Useful if points or faces have been modified after scene object creation.
 }

@@ -23,7 +23,7 @@ Create an object of class "scenesetr_scene" containing scene elements.
 A scene is a list of scene elements, so can be subset with
 \code{[}, \code{[[} and \code{$} and combined with \code{c()}. A scene may have names.
 
-A scene with lights, scene objects and a camera can be visualised with \code{\link[=record]{record()}}.
+A scene with lights, scene objects and a camera can be visualized with \code{\link[=record]{record()}}.
 }
 \seealso{
 \code{\link[=camera]{camera()}}, \code{\link[=light]{light()}}, \code{\link[=record]{record()}}.

@@ -11,7 +11,7 @@
 #' appended to them using `$<-` and accessed using `$`.
 #' 
 #' `initial(element$new_variable) <- value` can be useful in setting the 
-#' `value` of a `new_variable` at frame zero in the behaviour of an `element`. 
+#' `value` of a `new_variable` at frame zero in the behavior of an `element`. 
 #' The new variable can then be accessed in the current and subsequent frames 
 #' using `element$new_variable`.
 #' 
@@ -25,7 +25,7 @@
 #' value from the left-hand side.)
 #' 
 #' @examples
-#' count_to_fifty <- function(element, ...){
+#' count_to_fifty <- function(element, ...) {
 #'   initial(element$counter) <- 0
 #'   print(element$counter)
 #'   if(element$counter == 50) return(game_over("Fifty reached"))
@@ -36,11 +36,11 @@
 #' cam <- behave(camera(), count_to_fifty)
 #' scene <- scene(cam)
 #' \dontrun{
-#' see(scene)
+#' record(scene)
 #' }
 #' @seealso [behave()], [spin()].
 #' @export
 
-`initial<-` <- function(x, value){
+`initial<-` <- function(x, value) {
   if(is.null(x)) value else x
 }

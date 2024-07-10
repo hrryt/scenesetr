@@ -24,7 +24,7 @@ Rotate a scene element from its current orientation.
 }
 \details{
 If \code{axis} is specified as a 3-D vector, the element is rotated about its
-location about an axis parallel to the specified vector.
+position about an axis parallel to the specified vector.
 
 \code{axis} can be specified as a character string describing the direction in
 which the object is to be rotated relative to its current direction.
@@ -33,5 +33,5 @@ See \code{\link[=skewer]{skewer()}} with \code{to_rotate = TRUE}.
 If \code{x} is a scene, \code{rotate()} will be applied to every element in the scene.
 }
 \seealso{
-\code{\link[=point]{point()}}, \code{\link[=direction]{direction()}}, \code{\link[=rotation]{rotation()}}, \code{\link[=looked_at]{looked_at()}}.
+\code{\link[=point]{point()}}, \code{\link[=direction]{direction()}}, \code{\link[=orientation]{orientation()}}, \code{\link[=looked_at]{looked_at()}}.
 }

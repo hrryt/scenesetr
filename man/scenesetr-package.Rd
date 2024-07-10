@@ -6,7 +6,7 @@
 \alias{scenesetr-package}
 \title{scenesetr: Construct and Render Interactive 3-Dimensional Scenes}
 \description{
-Interactively explore and animate custom 3-D scenes. Define behaviours of lights, cameras and objects in response to key inputs and each other, and record scenes as they pan out in real time. For a complete list of functions, use `library(help = "scenesetr")`.
+Interactively explore and animate custom 3-D scenes. Define behaviors of lights, cameras and objects in response to key inputs and each other, and record scenes as they pan out in real time. Visualise global spatiotemporal raster data. For a complete list of functions, use `help(package = "scenesetr")`.
 }
 \seealso{
 Useful links:
@@ -19,9 +19,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Harry Thompson \email{harry@mayesfield.uk}
 
-Other contributors:
+Authors:
 \itemize{
-  \item Oliver Carter-Bones [contributor]
+  \item Oliver Carter-Bones
 }
 
 }

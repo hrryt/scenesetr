@@ -21,14 +21,14 @@ Test whether a scene element is facing another scene element with a threshold
 angle of observation.
 }
 \details{
-Tests whether the location of the \code{lookee} is within a cone from the location
+Tests whether the position of the \code{lookee} is within a cone from the position
 of the \code{looker} in the direction of the \code{looker} with a specified threshold
 \code{angle} from the line of sight of the \code{looker}.
 
-The location and direction of an element can be queried with \code{\link[=location]{location()}} and
+The position and direction of an element can be queried with \code{\link[=position]{position()}} and
 \code{\link[=direction]{direction()}} respectively.
 
-Useful in defining behaviours on sight or interaction.
+Useful in defining behaviors on sight or interaction.
 
 If an element is unplaced, \code{looked_at()} will return \code{FALSE}.
 }

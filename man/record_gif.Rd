@@ -8,12 +8,10 @@ record_gif(
   x,
   gif_file = "animation.gif",
   width = 800,
+  height = 600,
   delay = 1/30,
   loop = TRUE,
-  progress = TRUE,
-  render_order = NULL,
-  lwd = 1,
-  ...
+  progress = TRUE
 )
 }
 \arguments{
@@ -24,18 +22,14 @@ or recording (object of class "scenesetr_recording")}
 
 \item{width}{gif width in pixels}
 
+\item{height}{gif height in pixel}
+
 \item{delay}{time to show each image in seconds}
 
 \item{loop}{if the gif should be repeated. Set to FALSE to only play
 once, or a number to indicate how many times to repeat after the first.}
 
 \item{progress}{print some verbose status output}
-
-\item{render_order}{optional numeric vector of object indices}
-
-\item{lwd}{passed to \code{\link[graphics:polygon]{graphics::polygon()}}}
-
-\item{...}{other graphical parameters passed to \link{png}}
 }
 \value{
 Object of class "scenesetr_recording", invisibly. List of three elements:
@@ -51,13 +45,7 @@ Save a recording to GIF or record a scene to GIF.
 \details{
 Creates a temporary directory to store PNG files of each frame, which are
 then converted to GIF by \code{\link[gifski:gifski]{gifski::gifski()}}. Frames are run using \code{\link[=record]{record()}}
-with the \code{\link[grDevices:png]{grDevices::png()}} device.
+with \code{save_to_png = TRUE}.
 
-It is recommended that \code{x} be a recording from \code{record()} rather than a scene,
-as no visible graphics window is used.
-If \code{x} is a scene, key inputs are logged and used in \code{record()} as each
-frame is calculated.
-
-All arguments except for \code{x}, \code{render_order} and \code{...} are passed to \code{gifski()}, along with
-the height calculated by \code{record()} from \code{width} and the aspect of the camera.
+All arguments except for \code{x} are passed to \code{gifski()}.
 }

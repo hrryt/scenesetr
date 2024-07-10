@@ -4,20 +4,14 @@
 \alias{light}
 \title{Create a Light}
 \usage{
-light(col = "white", place = NA, direction = NA, behaviours = list())
+light(position = NA, direction = NA, color = "white")
 }
 \arguments{
-\item{col}{vector of any of the three kinds of \R color specifications,
-    i.e., either a color name (as listed by \code{\link[grDevices]{colors}()}), a
-    hexadecimal string of the form \code{"#rrggbb"} or
-    \code{"#rrggbbaa"} (see \code{\link[grDevices]{rgb}}), or a positive integer
-    \code{i} meaning \code{\link[grDevices]{palette}()[i]}.}
-
-\item{place}{numeric vector. 3-D (x,y,z) coordinates}
+\item{position}{numeric vector. 3-D (x,y,z) coordinates}
 
 \item{direction}{numeric vector. 3-D (x,y,z) coordinates}
 
-\item{behaviours}{named list of behaviour functions}
+\item{color}{passed to \code{\link[grDevices:col2rgb]{grDevices::col2rgb()}}}
 }
 \value{
 Object of class "scenesetr_light".
@@ -28,7 +22,7 @@ be seen from the viewpoint of a camera when \code{\link[=record]{record()}} is c
 }
 \details{
 There are four categories of light. Ambient light, directional light, point
-light and spotlight. Default arguments return a white ambient light with no behaviour.
+light and spotlight. Default arguments return a white ambient light with no behavior.
 
 If a light is unplaced and has no direction, it is an ambient light, which
 exerts equal shading on every polygon.
@@ -42,7 +36,7 @@ as an omni-directional light from a point source at its location.
 If a light has both a location and a direction, it is a spotlight, which acts
 as a point light, but only acting on a cone in the direction specified.
 
-\code{direction} will be normalised to a 3-D vector of unit length.
+\code{direction} will be normalized to a 3-D vector of unit length.
 }
 \seealso{
 \code{\link[=camera]{camera()}}, \code{\link[=scene]{scene()}}.

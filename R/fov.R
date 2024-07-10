@@ -14,7 +14,8 @@
 #' The field of view of a camera in a scene is used by [record()] in configuring 
 #' the perspective of the rendered frames from the viewpoint of the camera.
 #' 
-#' @inheritParams aspect
+#' @param x camera (object of class "scenesetr_camera")
+#' @param value numeric replacement value
 #' @returns
 #' For `fov(x)`, the field of view as a double.
 #' 
@@ -28,7 +29,7 @@ fov <- function(x) x$fov
 
 #' @rdname fov
 #' @export
-`fov<-` <- function(x, value){
+`fov<-` <- function(x, value) {
   stopifnot(
     "value must be length 1" = length(value) == 1,
     "value must be double" = is.double(value)
