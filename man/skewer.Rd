@@ -17,9 +17,9 @@ scene object (object of class "scenesetr_obj").}
 
 \item{direction}{character string}
 
-\item{to_rotate}{logical value indicating whether \code{direction} indicates the
+\item{to_rotate}{logical; should \code{direction} indicate the
 direction of rotation were an element to be rotated about the returned axis,
-or whether \code{direction} simply indicates the direction of the returned axis}
+or simply the direction of the returned axis?}
 }
 \value{
 numeric vector. 3-D (x,y,z) coordinates describing a vector of unit

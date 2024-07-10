@@ -9,7 +9,8 @@ record(
   width = 1920,
   height = 1080,
   save_to_png = FALSE,
-  filename = "Rplot\%05d.png"
+  filename = "Rplot\%05d.png",
+  one_frame = FALSE
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ or recording (object of class "scenesetr_recording")}
 
 \item{filename}{the path of the output PNG file. The frame number is substituted
 if a C integer format is included in the character string.}
+
+\item{one_frame}{logical value. Should only the first frame be rendered?}
 }
 \value{
 Object of class "scenesetr_recording", invisibly. List of three elements:
@@ -34,7 +37,7 @@ Object of class "scenesetr_recording", invisibly. List of three elements:
 }
 }
 \description{
-View a scene from the perspective of a camera. Record and replay how behaviours
+View a scene from the perspective of a camera. Record and replay how behaviors
 play out frame by frame with real-time key inputs from the user.
 }
 \details{

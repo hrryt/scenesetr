@@ -6,17 +6,13 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is an incomplete branch of scenesetr. See the master branch.
-
 The goal of scenesetr is to allow R users to interactively explore and
 animate custom 3-D scenes. scenesetr provides intuitive tools to define
-behaviours of lights, cameras and objects in response to key inputs and
-each other, and to record scenes as they pan out in real time. Recorded
-scenes can be replayed to a separate device or saved to GIF.
+behaviors of lights, cameras and objects in response to key inputs and
+each other, and to record scenes as they pan out in real time. Save
+recordings to PNG or GIF.
 
 Scene objects can be read from .obj files and `stars` raster objects.
-
-For the moment, key input is only available on Windows.
 
 ## Installation
 
@@ -36,141 +32,156 @@ library(magrittr)
 library(scenesetr)
 ```
 
-### Visualise raster objects
+### Visualize and animate raster data
 
 ``` r
-# install.packages(c("sf", "stars"))
-# Modify st_downsample argument for faster render
-mosaic <- . %>%
-  list.files(full.names = TRUE) %>%
-  lapply(stars::read_stars) %>%
-  do.call(what = stars::st_mosaic) %>%
-  stars::st_downsample(5) %>%
-  multiply_by(1.5e-4)
+# install.packages(c("sf", "stars", "data.table"))
+library(stars)
+library(sf)
+library(magrittr)
 
-# read .tif files to stars raster
-# NOAA National Centers for Environmental Information. 2022: ETOPO 2022 15 Arc-Second Global Relief Model. 
-# NOAA National Centers for Environmental Information. DOI: 10.25921/fd45-gt74. Accessed 01/03/2024.
-ice_mosaic <- mosaic("greenland_ice")
-bed_mosaic <- mosaic("greenland_bed")
+# Load in Greenland relief data as stars rasters
+bed_mosaic <- greenland_bed * 0.15
+ice_mosaic <- greenland_ice * 0.15
+ice_mosaic <- st_warp(ice_mosaic, bed_mosaic)
 
-# Bed below sea level
-sea_bed_mosaic <- bed_mosaic
-sea_bed_mosaic[[1]][sea_bed_mosaic[[1]] >= 0] <- NA 
-# Set sea level constant
-sea_mosaic <- sea_bed_mosaic
-sea_mosaic[[1]][!is.na(sea_mosaic[[1]])] <- 0
-# Surface above sea level
-bed_mosaic[[1]][bed_mosaic[[1]] < 0] <- NA
-ice_mosaic[[1]][ice_mosaic[[1]] < 0] <- NA
-# Ice above bed
-ice_mosaic[[1]][(ice_mosaic - bed_mosaic)[[1]] <= 0] <- NA
+# RGB raster of NASA's "blue marble", a true-color image of the Earth
+# https://visibleearth.nasa.gov/images/57752/blue-marble-land-surface-shallow-water-and-shaded-topography
+# https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57752/land_shallow_topo_8192.tif
+blue_marble <- read_stars("land_shallow_topo_8192.tif") %>%
+  st_downsample(3)
+x_dim <- (((st_get_dimension_values(blue_marble, "x")-.5) / nrow(blue_marble))-.5) * 360
+y_dim <- (((st_get_dimension_values(blue_marble, "y")+.5) / ncol(blue_marble))-.5) * 180
+blue_marble <- blue_marble %>%
+  st_set_dimensions("x", x_dim) %>%
+  st_set_dimensions("y", y_dim) %>%
+  st_set_crs("WGS84") %>%
+  st_warp(bed_mosaic) %>%
+  split("band") %>%
+  set_names(c("red", "green", "blue"))
 
-# Convert raster to scene object
-globe <- . %>%
-  st_as_obj(as_sphere = TRUE) %>%
-  place(c(0,0,12)) %>%
+bed_mosaic <- c(bed_mosaic, blue_marble / 255)
+
+# Add a lake under the Greenland ice cap and lighten the ocean floor
+for(colour in names(blue_marble)){
+  bed_mosaic[[colour]][bed_mosaic$relief < 0 & !is.na(ice_mosaic$relief)] <- bed_mosaic[[colour]][[1,1]]
+  bed_mosaic[[colour]][bed_mosaic$relief < 0 & is.na(ice_mosaic$relief)] <- 1-(0.8*(1-bed_mosaic[[colour]][[1,1]]))
+}
+
+# NOAA time series data of Arctic sea ice concentration in 2023
+# https://polarwatch.noaa.gov/erddap/griddap/nsidcG10016v2nh1day.nc?cdr_seaice_conc[(2023-01-01T00:00:00Z):1:(2024-01-01T00:00:00Z)][(5837500.0):1:(-5337500)][(-383750.0):1:(3737500.0)]
+sea_mosaic <- read_ncdf("sea_ice.nc", var = "cdr_seaice_conc")
+st_crs(sea_mosaic) <- "EPSG:3411"
+names(sea_mosaic) <- "paint"
+units(sea_mosaic$paint) <- NULL
+sea_mosaic <- st_warp(sea_mosaic, bed_mosaic)
+sea_colors <- rev(paste0(grDevices::blues9, as.hexmode(255-(0:8)*12)))
+
+# The sea_mosaic stars raster has a time dimension so will be animated
+sea_obj <- st_as_obj(sea_mosaic, colors = sea_colors, quit_after_cycle = TRUE, alpha = TRUE)
+bed_obj <- st_as_obj(bed_mosaic, max_color_value = 255)
+ice_obj <- st_as_obj(ice_mosaic, colors = "#ffffff99", alpha = TRUE)
+
+greenland_objs <- scene(bed_obj, ice_obj, sea_obj) %>%
+  place(c(0,0,13)) %>%
   rotate("up", 75) %>%
   rotate("right", 25)
 
-sea_bed <- globe(sea_bed_mosaic) %>% paint("ivory4")
-new_sea <- globe(new_sea_mosaic) %>% paint("#27408b99")
-bed <- globe(bed_mosaic) %>% paint("darkolivegreen")
-ice <- globe(ice_mosaic) %>% paint("#ffffff99")
-
-# Create a scene with objects, lights and a camera
-scene <- scene(
-  sea_bed, sea, bed, ice,
-  light() %>% place(c(0,0,0)),
-  light() %>% point(c(-1,0,0)) %>% paint("lightyellow"),
-  camera() %>% set_aspect(16/9) %>% rotate("right", 30) %>% behave(quit_after_frame)
-)
-
-# Record to png
-record(scene, render_order = 1:4, device = png, width = 1920)
-```
-
-<figure>
-<img src="man/figures/README-greenland.png"
-alt="Ice cover of Greenland over bed topography" />
-<figcaption aria-hidden="true">Ice cover of Greenland over bed
-topography</figcaption>
-</figure>
-
-### Simulate emergent behaviour
-
-``` r
-boid <- obj_example("cat.obj") %>%
-  read_obj() %>%
-  behave(boid)
-
-# Randomly position 20 boids
-set.seed(1)
-scene <- scene(
-  camera() %>% place(c(0,0,-300)),
-  light() %>% point(c(0,0,1)),
-  light() %>% place(c(0,0,0)) %>% paint("lightyellow"),
-  list = replicate(20, list(boid %>% place(200 * runif(3))))
-)
-
-# Record interactively and replay to gif
-recording <- record(scene)
-record_gif(recording)
-```
-
-<figure>
-<img src="man/figures/README-boids.gif"
-alt="Cats behaving as a swarm of boids" />
-<figcaption aria-hidden="true">Cats behaving as a swarm of
-boids</figcaption>
-</figure>
-
-### Design interactive experiences
-
-``` r
-moai <- obj_example("moai.obj") %>%
-  read_obj() %>%
-  paint(c("red", "purple"))
-
-cat <- read_obj(obj_example("cat.obj"))
-
-scene <- scene(
-  moai %>%
-    place(c(0,0,15)) %>%
-    point(c(0,1,0)) %>%
-    rotate("clockwise", 30) %>%
-    behave(spin("down", 3), pushable, fragile),
-  cat %>%
-    place(c(15,0,15)) %>%
-    point(c(0,0,-1)) %>%
-    paint("orange") %>%
-    behave(fragile),
-  moai %>%
-    behave(bullet),
-  cat %>%
-    place(c(0,0,0)) %>%
-    paint("tan") %>%
-    behave(wasd, jump),
-  light() %>%
-    place(c(0,0,0)) %>%
-    behave(float_behind) %>%
-    paint("grey"),
+greenland_scene <- c(greenland_objs, scene(
+  light() %>% 
+    point(c(1,0,0)),
   light() %>%
     point(c(0,0,1)) %>%
+    rotate("up", 45) %>%
+    rotate("right", 90) %>%
     paint("lightyellow"),
   camera() %>%
-    behave(float_behind)
-)
+    rotate("right", 30)
+))
 
-# Record, watch back, then save to GIF
-recording <- record(scene)
-record(recording)
-record_gif(recording)
+record_gif(greenland_scene, width = 960, height = 540)
 ```
 
 <figure>
-<img src="man/figures/README-shoot.gif"
-alt="Interactive control of objects, lights and cameras" />
-<figcaption aria-hidden="true">Interactive control of objects, lights
-and cameras</figcaption>
+<img src="man/figures/README-greenland.gif"
+alt="Timelapse of sea ice cover with bed topography under the Greenland ice cap" />
+<figcaption aria-hidden="true">Timelapse of sea ice cover with bed
+topography under the Greenland ice cap</figcaption>
+</figure>
+
+### Simulate complex behavior
+
+``` r
+bounding_size <- 10
+boid_size <- 0.1
+n_boids <- 60
+
+# Define a custom behavior for a scene element
+swarm <- function(element, scene, ...) {
+  
+  # Create a velocity variable to store in each element between frames
+  initial(element$velocity) <- c(0,0,0)
+  
+  # Get the positions and velocities of all the boids in the swarm
+  boids <- scene[scene %behaves% swarm]
+  positions <- sapply(boids, position)
+  velocities <- sapply(boids, function(boid) boid$velocity %||% direction(boid))
+  is_close <- sapply(boids, in_range, element, bounding_size / 3)
+  close_positions <- positions[, is_close, drop = FALSE]
+  
+  # Response to other boids
+  velocity <- element$velocity + 0.005 * (
+    (rowMeans(positions) - position(element)) +       # cohesion
+    (position(element) - rowMeans(close_positions)) + # separation
+    2*(rowMeans(velocities) - element$velocity)       # alignment
+  )
+  
+  # Clamp speed between 1.0 and 0.1
+  magnitude <- sqrt(sum(velocity^2))
+  if(magnitude > 1.0) velocity <- 1.0 * velocity / magnitude
+  if(magnitude < 0.1) velocity <- 0.1 * velocity / magnitude
+  
+  # Bounce off walls of bounding box
+  velocity[position(element) > bounding_size] <- -0.05
+  velocity[position(element) < 0] <- 0.05
+  
+  # Update the velocity variable
+  element$velocity <- velocity
+  
+  # Update the direction and position of the scene element
+  direction(element) <- velocity
+  move(element, velocity)
+}
+
+# All boids will have these properties
+boid <- pyramid_obj(boid_size) %>%
+  paint("lightblue") %>%
+  behave(swarm)
+
+set.seed(1)
+scene <- scene(
+  camera() %>%
+    place(bounding_size * c(0.02,0.7,0.02)) %>%
+    point(c(1,0,1)) %>%
+    rotate("right", 5) %>%
+    rotate("down", 15),
+  light() %>%
+    point(c(1,2,3)),
+  light() %>%
+    paint("lightyellow"),
+  cube_obj(bounding_size, inverse = TRUE) %>%
+    place(c(0,0,0)) %>%
+    paint("darkolivegreen"),
+  list = replicate(n_boids, list(
+    # Randomly position boids within bounding box
+    place(boid, bounding_size * runif(3))
+  ))
+)
+
+record_gif(scene)
+```
+
+<figure>
+<img src="man/figures/README-boids.gif" alt="A swarm of boids" />
+<figcaption aria-hidden="true">A swarm of boids</figcaption>
 </figure>

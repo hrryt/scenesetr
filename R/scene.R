@@ -6,7 +6,7 @@
 #' A scene is a list of scene elements, so can be subset with 
 #' `[`, `[[` and `$` and combined with `c()`. A scene may have names.
 #' 
-#' A scene with lights, scene objects and a camera can be visualised with [record()].  
+#' A scene with lights, scene objects and a camera can be visualized with [record()].  
 #' 
 #' @param ... scene elements. Camera (object of class "scenesetr_camera") or 
 #' light (object of class "scenesetr_light") or 
@@ -16,21 +16,21 @@
 #' @seealso [camera()], [light()], [record()].
 #' @export
 
-scene <- function(..., list = NULL){
+scene <- function(..., list = NULL) {
   x <- c(list(...), list)
   class(x) <- "scenesetr_scene"
   x
 }
 
 #' @export
-`[.scenesetr_scene` <- function(x, i, ...){
+`[.scenesetr_scene` <- function(x, i, ...) {
   x <- `[.listof`(x, i, ...)
   class(x) <- "scenesetr_scene"
   x
 }
 
 #' @export
-c.scenesetr_scene <- function(x, ...){
+c.scenesetr_scene <- function(x, ...) {
   x <- c(unclass(x), ...)
   class(x) <- "scenesetr_scene"
   x

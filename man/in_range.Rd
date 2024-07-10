@@ -24,7 +24,7 @@ Tests whether the distance between the positions of two elements is less
 than a threshold distance specified by \code{range}.
 The position of an element can be queried with \code{\link[=position]{position()}}.
 
-Useful in defining collision behaviours.
+Useful in defining collision behaviors.
 
 If an element is unplaced, \code{in_range()} will return \code{FALSE}.
 }

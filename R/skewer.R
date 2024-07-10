@@ -16,11 +16,11 @@
 #' 
 #' `direction` can only be set to "clockwise" if `to_rotate` is `TRUE`.
 #' 
-#' @inheritParams behaviours
+#' @inheritParams behaviors
 #' @param direction character string
-#' @param to_rotate logical value indicating whether `direction` indicates the 
+#' @param to_rotate logical; should `direction` indicate the 
 #' direction of rotation were an element to be rotated about the returned axis, 
-#' or whether `direction` simply indicates the direction of the returned axis
+#' or simply the direction of the returned axis?
 #' @returns numeric vector. 3-D (x,y,z) coordinates describing a vector of unit 
 #' length in the direction specified.
 #' 
@@ -35,7 +35,7 @@
 #' 
 #' @export
 
-skewer <- function(x, direction = c("up", "down", "left", "right", "clockwise"), to_rotate = FALSE){
+skewer <- function(x, direction = c("up", "down", "left", "right", "clockwise"), to_rotate = FALSE) {
   dir <- match.arg(direction)
   if(!to_rotate) dir <- switch(
     dir,
@@ -54,5 +54,5 @@ skewer <- function(x, direction = c("up", "down", "left", "right", "clockwise"),
     left = c(-d[1]*d[2], sum(d[-2]^2), -d[2]*d[3]),
     clockwise = d
   )
-  roll(x$orientation) %qpq% axis
+  roll(orientation(x)) %rot% axis
 }

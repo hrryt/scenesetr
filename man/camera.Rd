@@ -21,11 +21,11 @@ Create an object of class "scenesetr_camera". Calling \code{\link[=record]{recor
 a camera allows the user to view the scene from the viewpoint of the camera.
 }
 \details{
-\code{direction} will be normalised to a 3-D vector of unit length.
+\code{direction} will be normalized to a 3-D vector of unit length.
 
 Default arguments return a camera at the origin facing the positive
 z direction, with a sixty degree field of view and no
-behaviour.
+behavior.
 }
 \seealso{
 \code{\link[=fov]{fov()}}, \code{\link[=light]{light()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.

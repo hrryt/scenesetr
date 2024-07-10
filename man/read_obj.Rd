@@ -33,8 +33,8 @@ If no face normals or face normal indices are found, they will be added
 by \code{\link[=add_normals]{add_normals()}}.
 
 All returned scene objects are painted white, unplaced,
-have no behaviours and face the positive z direction.
+have no behaviors and face the positive z direction.
 }
 \seealso{
-\code{\link[=st_as_obj]{st_as_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
+\code{\link[=st_as_obj]{st_as_obj()}}, \code{\link[=cube_obj]{cube_obj()}}, \code{\link[=scene]{scene()}}, \code{\link[=record]{record()}}.
 }

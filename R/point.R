@@ -36,13 +36,13 @@
 point <- function(x, direction, rotate_to = FALSE) UseMethod("point")
 
 #' @export
-point.default <- function(x, direction, rotate_to = FALSE){
+point.default <- function(x, direction, rotate_to = FALSE) {
   x$orientation <- if(rotate_to) direction(x) %to% direction %q% x$orientation else dir2q(direction)
   x
 }
 
 #' @export
-point.scenesetr_scene <- function(x, direction, rotate_to = FALSE){
+point.scenesetr_scene <- function(x, direction, rotate_to = FALSE) {
   x <- lapply(x, point, direction, rotate_to)
   class(x) <- "scenesetr_scene"
   x

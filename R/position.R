@@ -18,7 +18,7 @@
 #' @seealso [place()], [move()], [looked_at()], [in_range()].
 #' @export
 
-position <- function(x){
+position <- function(x) {
   x$position
 }
 

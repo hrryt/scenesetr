@@ -7,7 +7,7 @@
 #' than a threshold distance specified by `range`. 
 #' The position of an element can be queried with [position()].
 #' 
-#' Useful in defining collision behaviours.
+#' Useful in defining collision behaviors.
 #' 
 #' If an element is unplaced, `in_range()` will return `FALSE`.
 #' 
@@ -19,7 +19,7 @@
 #' @seealso [looked_at()], [behave()], [spin()].
 #' @export
 
-in_range <- function(x, y, range){
+in_range <- function(x, y, range) {
   out <- sqrt(sum((position(x) - position(y))^2)) < range
   if(is.na(out)) return(FALSE)
   out

@@ -5,16 +5,9 @@
 #' @details
 #' Creates a temporary directory to store PNG files of each frame, which are 
 #' then converted to GIF by [gifski::gifski()]. Frames are run using [record()] 
-#' with the [grDevices::png()] device.
+#' with `save_to_png = TRUE`.
 #' 
-#' It is recommended that `x` be a recording from `record()` rather than a scene, 
-#' as no visible graphics window is used. 
-#' If `x` is a scene, key inputs are logged and used in `record()` as each 
-#' frame is calculated.
-#' 
-#' All arguments except for `x`, `render_order` and `...` are passed to `gifski()`, along with 
-#' the height calculated by `record()` from `width` and the aspect of the camera.
-#' 
+#' All arguments except for `x` are passed to `gifski()`.
 #' @inheritParams gifski::save_gif
 #' @inheritParams record
 #' @returns Object of class "scenesetr_recording", invisibly. List of three elements:
@@ -25,7 +18,7 @@
 
 record_gif <- function(
     x, gif_file = "animation.gif", width = 800, height = 600,
-    delay = 1/30, loop = TRUE, progress = TRUE){
+    delay = 1/30, loop = TRUE, progress = TRUE) {
   
   rlang::check_installed("gifski", reason = "to use gifski()")
   

@@ -28,7 +28,7 @@ of the \code{looker} in the direction of the \code{looker} with a specified thre
 The position and direction of an element can be queried with \code{\link[=position]{position()}} and
 \code{\link[=direction]{direction()}} respectively.
 
-Useful in defining behaviours on sight or interaction.
+Useful in defining behaviors on sight or interaction.
 
 If an element is unplaced, \code{looked_at()} will return \code{FALSE}.
 }

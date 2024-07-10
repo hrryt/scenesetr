@@ -45,13 +45,7 @@ Save a recording to GIF or record a scene to GIF.
 \details{
 Creates a temporary directory to store PNG files of each frame, which are
 then converted to GIF by \code{\link[gifski:gifski]{gifski::gifski()}}. Frames are run using \code{\link[=record]{record()}}
-with the \code{\link[grDevices:png]{grDevices::png()}} device.
+with \code{save_to_png = TRUE}.
 
-It is recommended that \code{x} be a recording from \code{record()} rather than a scene,
-as no visible graphics window is used.
-If \code{x} is a scene, key inputs are logged and used in \code{record()} as each
-frame is calculated.
-
-All arguments except for \code{x}, \code{render_order} and \code{...} are passed to \code{gifski()}, along with
-the height calculated by \code{record()} from \code{width} and the aspect of the camera.
+All arguments except for \code{x} are passed to \code{gifski()}.
 }

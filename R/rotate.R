@@ -23,12 +23,12 @@
 rotate <- function(x, axis, angle) UseMethod("rotate")
 
 #' @export
-rotate.default <- function(x, axis, angle){
+rotate.default <- function(x, axis, angle) {
   stopifnot(
     "axis must be length 3 or character" = length(axis) == 3 || is.character(axis),
     "angle must be length 1" = length(angle) == 1
   )
-  axis <- if(is.character(axis)) skewer(x, axis, to_rotate = TRUE)
+  if(is.character(axis)) axis <- skewer(x, axis, to_rotate = TRUE)
   if(sum(axis) == 0) return(x)
   orientation <- quaternion_pi(normalise(axis), angle / 360) %q% x$orientation
   if(anyNA(orientation)) orientation <- NA_real_
@@ -37,7 +37,7 @@ rotate.default <- function(x, axis, angle){
 }
 
 #' @export
-rotate.scenesetr_scene <- function(x, axis, angle){
+rotate.scenesetr_scene <- function(x, axis, angle) {
   x <- lapply(x, rotate, axis, angle)
   class(x) <- "scenesetr_scene"
   x

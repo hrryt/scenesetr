@@ -1,17 +1,30 @@
-init_renderer <- function(scene, width, height){
+init_renderer <- function(renderer, scene, width, height) {
   
-  object <- scene[sapply(scene, inherits, "scenesetr_obj")][[1]]
+  objects <- scene[sapply(scene, inherits, "scenesetr_obj")]
+  
+  renderer$InitMeshShaderProgram(get_extdata("mesh.vert"), get_extdata("mesh.frag"))
+  renderer$UseMeshShaderProgram()
+  for(object in objects) init_mesh(renderer, object)
+  
+}
+
+init_mesh <- function(renderer, object) {
+  mesh <- unpack_mesh(object)
+  renderer$InitMesh(mesh$vertices, mesh$indices)
+}
+
+unpack_mesh <- function(object) {
   normals <- object$normals[, object$normal_indices]
-  vertices <- object$positions[, object$indices]
-  vertices <- as.vector(rbind(vertices, normals))
-  indices <- seq_len(length(object$indices)) - 1
+  positions <- object$positions[, object$indices]
+  indices <- object$indices
   
-  vertex_shader <- get_extdata("default.vert")
-  fragment_shader <- get_extdata("default.frag")
+  colors <- object$color / 255
+  if(nrow(colors) == 3) colors <- rbind(colors, 1)
+  col_ind <- if(ncol(colors) == 1) rep(1, ncol(indices)) else seq_len(ncol(colors))
+  colors <- colors[, rep(col_ind, each=3), drop=FALSE]
   
-  renderer <- new(GLRenderer, "scenesetr render", width, height)
-  renderer$SetCameraResolution(width, height)
-  renderer$InitShaderProgram(vertex_shader, fragment_shader)
-  renderer$InitBuffers(vertices, indices)
-  renderer
+  vertices <- as.vector(rbind(positions, normals, colors))
+  indices <- seq_along(indices) - 1
+  
+  list(vertices = vertices, indices = indices)
 }

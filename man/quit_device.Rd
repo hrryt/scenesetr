@@ -18,17 +18,17 @@ For \code{quit_device()}, 0.
 For \code{restart()}, 1.
 }
 \description{
-Functions to be called within behaviours to quit or restart \code{\link[=record]{record()}}.
+Functions to be called within behaviors to quit or restart \code{\link[=record]{record()}}.
 }
 \details{
-A behaviour that returns the result of \code{quit_device()} or \code{restart()} instead
+A behavior that returns the result of \code{quit_device()} or \code{restart()} instead
 of returning the updated element causes \code{\link[=record]{record()}} to quit the graphics device
 or return the scene to its original value respectively when it is applied.
 
 Restarting a scene resets all values stored in its elements. See \code{\link{initial<-}}.
 }
 \examples{
-count_to_thirty <- function(element, frame, ...){
+count_to_thirty <- function(element, frame, ...) {
   print(frame)
   if(frame == 30) return(quit_device("Thirty reached\n"))
   element
@@ -37,10 +37,10 @@ count_to_thirty <- function(element, frame, ...){
 cam <- behave(camera(), count_to_thirty)
 scene <- scene(cam)
 \dontrun{
-see(scene)
+record(scene)
 }
 
-restart_if_twenty <- function(element, frame, ...){
+restart_if_twenty <- function(element, frame, ...) {
   if(frame == 20) return(restart("Twenty reached\n"))
   element
 }
@@ -49,7 +49,7 @@ restarting_cam <- behave(cam, restart_if_twenty)
 restarting_scene <- scene(restarting_cam)
 \dontrun{
 # Restarting doesn't restart the frame number; only restarts the scene
-see(restarting_scene)
+record(restarting_scene)
 }
 }
 \seealso{

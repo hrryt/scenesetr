@@ -5,7 +5,7 @@
 #' 
 #' @details
 #' There are four categories of light. Ambient light, directional light, point 
-#' light and spotlight. Default arguments return a white ambient light with no behaviour.
+#' light and spotlight. Default arguments return a white ambient light with no behavior.
 #' 
 #' If a light is unplaced and has no direction, it is an ambient light, which 
 #' exerts equal shading on every polygon.
@@ -19,7 +19,7 @@
 #' If a light has both a location and a direction, it is a spotlight, which acts 
 #' as a point light, but only acting on a cone in the direction specified.
 #' 
-#' `direction` will be normalised to a 3-D vector of unit length.
+#' `direction` will be normalized to a 3-D vector of unit length.
 #' 
 #' @inheritParams camera
 #' @param color passed to [grDevices::col2rgb()]
@@ -30,14 +30,14 @@
 light <- function(
     position = NA,
     direction = NA,
-    color = "white"){
-  color <- format_col(color)
+    color = "white") {
+  color <- format_color(color)
   position <- format_place(position)
   orientation <- dir2q(direction)
   x <- list(
     position = position,
     orientation = orientation,
-    behaviours = list(),
+    behaviors = list(),
     color = color
   )
   class(x) <- "scenesetr_light"

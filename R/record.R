@@ -1,6 +1,6 @@
 #' Interactive 3-D Render of a Scene
 #' 
-#' View a scene from the perspective of a camera. Record and replay how behaviours 
+#' View a scene from the perspective of a camera. Record and replay how behaviors 
 #' play out frame by frame with real-time key inputs from the user.
 #' 
 #' @details
@@ -16,6 +16,7 @@
 #' @param save_to_png logical value. Should every frame be saved as a PNG file? 
 #' @param filename the path of the output PNG file. The frame number is substituted 
 #' if a C integer format is included in the character string.
+#' @param one_frame logical value. Should only the first frame be rendered?
 #' @returns Object of class "scenesetr_recording", invisibly. List of three elements:
 #' * `initial_scene`: the original scene passed to `record()`,
 #' * `final_scene`: the scene as it was in the last frame before quitting the device,
@@ -28,7 +29,9 @@ record <- function(
     width = 1920,
     height = 1080,
     save_to_png = FALSE,
-    filename = "Rplot%05d.png") UseMethod("record")
+    filename = "Rplot%05d.png",
+    one_frame = FALSE)
+  UseMethod("record")
 
 #' @export
 record.scenesetr_scene <- function(
@@ -36,7 +39,8 @@ record.scenesetr_scene <- function(
     width = 1920,
     height = 1080,
     save_to_png = FALSE,
-    filename = "Rplot%03d.png"){
+    filename = "Rplot%03d.png",
+    one_frame = FALSE) {
   render(
     x,
     inputs = list(),
@@ -44,7 +48,8 @@ record.scenesetr_scene <- function(
     width = width,
     height = height,
     save_to_png = save_to_png,
-    filename = filename
+    filename = filename,
+    one_frame = one_frame
   )
 }
 
@@ -54,7 +59,8 @@ record.scenesetr_recording <- function(
     width = 1920,
     height = 1080,
     save_to_png = FALSE,
-    filename = "Rplot%03d.png"){
+    filename = "Rplot%03d.png",
+    one_frame = FALSE) {
   render(
     x$initial_scene,
     inputs = x$inputs,
@@ -62,6 +68,7 @@ record.scenesetr_recording <- function(
     width = width,
     height = height,
     save_to_png = save_to_png,
-    filename = filename
+    filename = filename,
+    one_frame = one_frame
   )
 }

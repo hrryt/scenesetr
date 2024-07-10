@@ -15,7 +15,7 @@
 #' by [add_normals()].
 #' 
 #' All returned scene objects are painted white, unplaced, 
-#' have no behaviours and face the positive z direction.
+#' have no behaviors and face the positive z direction.
 #' 
 #' @param file a connection object or a character string.
 #' @param take_first logical value indicating whether only the first object
@@ -23,10 +23,10 @@
 #' @returns Scene object (object of class "scenesetr_obj") if `take_first` is
 #' `TRUE`, otherwise scene (object of class "scenesetr_scene") containing all 
 #' scene objects described in the file.
-#' @seealso [st_as_obj()], [scene()], [record()].
+#' @seealso [st_as_obj()], [cube_obj()], [scene()], [record()].
 #' @export
 
-read_obj <- function(file, take_first = TRUE){
+read_obj <- function(file, take_first = TRUE) {
 
   file_lines <- readLines(file)
   m <- strsplit(file_lines, " ")
@@ -46,7 +46,7 @@ read_obj <- function(file, take_first = TRUE){
   objects
 }
 
-m2obj <- function(start, end, m){
+m2obj <- function(start, end, m) {
   
   m <- m[, start:end]
   
@@ -61,7 +61,7 @@ m2obj <- function(start, end, m){
   
   n <- m[1, ] == "vn"
   has_normals <- any(n, na.rm = TRUE)
-  if(has_normals){
+  if(has_normals) {
     normals <- m[-1, n, drop = FALSE]
     mode(normals) <- "double"
     is_na <- is.na(normals)
@@ -86,10 +86,10 @@ m2obj <- function(start, end, m){
   
   normal_indices <- NA_integer_
   
-  if(any(grepl("/", faces))){
+  if(any(grepl("/", faces))) {
     faces <- extract_from(raw_faces, ".*?(?=/)")
     if(has_normals) normal_indices <- extract_from(raw_faces, "([^/]*$)")
-  } else if(has_normals){
+  } else if(has_normals) {
     warning("normals found but no normal indices found; overwriting normals")
     has_normals <- FALSE
   }
@@ -101,7 +101,7 @@ m2obj <- function(start, end, m){
   triangulate(x)
 }
 
-extract_from <- function(faces, pattern){
+extract_from <- function(faces, pattern) {
   reg <- regexpr(pattern, faces, perl = TRUE)
   replace <- as.numeric(regmatches(faces, reg))
   out <- rep(NA, length(reg))

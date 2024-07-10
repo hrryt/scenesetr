@@ -21,19 +21,19 @@
 place <- function(x, where) UseMethod("place")
 
 #' @export
-place.default <- function(x, where){
+place.default <- function(x, where) {
   x$position <- format_place(where)
   x
 }
 
 #' @export
-place.scenesetr_scene <- function(x, where){
+place.scenesetr_scene <- function(x, where) {
   x <- lapply(x, place, where)
   class(x) <- "scenesetr_scene"
   x
 }
 
-format_place <- function(place){
+format_place <- function(place) {
   if(anyNA(place)) return(NA_real_)
   stopifnot("place must be length 3 or NA" = length(place) == 3)
   place

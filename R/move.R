@@ -24,7 +24,7 @@
 move <- function(x, translation) UseMethod("move")
 
 #' @export
-move.default <- function(x, translation){
+move.default <- function(x, translation) {
   if(anyNA(translation)) x$position <- NA_real_
   if(anyNA(x$position)) return(x)
   stopifnot(
@@ -35,7 +35,7 @@ move.default <- function(x, translation){
 }
 
 #' @export
-move.scenesetr_scene <- function(x, translation){
+move.scenesetr_scene <- function(x, translation) {
   x <- lapply(x, move, translation)
   class(x) <- "scene"
   x

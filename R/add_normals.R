@@ -17,7 +17,7 @@
 #' @param smooth logical value. Should normals be calculated per point rather than per face?
 #' @returns Updated scene object.
 #' @export
-add_normals <- function(x, smooth = FALSE){
+add_normals <- function(x, smooth = FALSE) {
   
   pts <- x$positions
   faces <- x$indices
@@ -39,7 +39,7 @@ add_normals <- function(x, smooth = FALSE){
   normals <- rowsum(t(n_pts), face_index, reorder = FALSE)
   normals <- normals / sqrt(rowSums(normals^2))
   
-  if(smooth){
+  if(smooth) {
     
     normals <- sapply(seq_len(ncol(pts)), \(n) colMeans(
       normals[colSums(faces == n) != 0, , drop = FALSE]

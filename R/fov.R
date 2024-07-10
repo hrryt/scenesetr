@@ -29,7 +29,7 @@ fov <- function(x) x$fov
 
 #' @rdname fov
 #' @export
-`fov<-` <- function(x, value){
+`fov<-` <- function(x, value) {
   stopifnot(
     "value must be length 1" = length(value) == 1,
     "value must be double" = is.double(value)

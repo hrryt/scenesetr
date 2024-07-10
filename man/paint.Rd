@@ -2,37 +2,34 @@
 % Please edit documentation in R/paint.R
 \name{paint}
 \alias{paint}
-\title{The Colour of a Scene Element}
+\title{The Color of a Scene Element}
 \usage{
-paint(x, color, scale = x$normals[1, ])
+paint(x, colors, scale = 0, ...)
 }
 \arguments{
 \item{x}{scene object (object of class "scenesetr_obj") or light (object of
 class "scenesetr_light") or scene (object of class "scenesetr_scene")}
 
-\item{color}{passed to \code{\link[grDevices:col2rgb]{grDevices::col2rgb()}}}
+\item{colors}{colors to interpolate; must be a valid argument to
+    \code{\link[grDevices]{col2rgb}()}.}
 
-\item{scale}{numeric vector. How far along the gradient is each face?}
+\item{scale}{numeric vector. How far along the color gradient is each face?}
+
+\item{...}{arguments to pass to \code{colorRamp}.}
 }
 \value{
-Scene object or light or scene with updated colour.
+Scene object or light or scene with updated color.
 }
 \description{
-Change the colour of a light or scene object.
+Change the color of a light or scene object.
 }
 \details{
-Paints all polygons of a scene object a specified colour, or alternatively
-sets the colour of a light. Transparency is ignored for lights, and transparent
-scene objects render much slower than opaque objects.
+Paints all polygons of a scene object a specified color, or alternatively
+sets the color of a light. Transparency is ignored for lights.
 
-Additionally, two colours can be given when painting a scene object, upon
-which a gradient between the two colours is applied to the object.
-This gradient is a linear interpolation in the RGBA colourspace. \code{scale},
-a numeric vector with an element for each face, specifies how far along this
-gradient each face is, and is automatically constrained to lie from 0 to 1.
-
-By default, \code{scale} is the degree to which each polygon faces the horizontal axis
-orthogonal to the direction the scene object faces.
+If more than one color is supplied to \code{colors} when painting a scene object,
+a \code{\link[grDevices:colorRamp]{grDevices::colorRamp()}} is created and called on the \code{scale},
+a numeric vector with an element for each polygon.
 
 By default, \code{\link[=light]{light()}} creates a white light, and \code{\link[=read_obj]{read_obj()}} and \code{\link[=st_as_obj]{st_as_obj()}}
 create white scene objects.

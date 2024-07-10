@@ -861,7 +861,7 @@ static unsigned int stbiw__zlib_countm(unsigned char *a, unsigned char *b, int l
   int i;
   for (i=0; i < limit && i < 258; ++i)
     if (a[i] != b[i]) break;
-    return i;
+  return i;
 }
 
 static unsigned int stbiw__zhash(unsigned char *data)

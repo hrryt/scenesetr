@@ -1,6 +1,12 @@
 #include "GLRenderer.h"
+
 #include <iostream>
-#include <vector>
+#include <string>
+#include <fstream>
+
+// #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -8,7 +14,7 @@
 GLRenderer::GLRenderer(const char* window_name, int width, int height) {
     // Initialize GLFW
     glfwInit();
-  
+
     // Create a windowed mode window and its OpenGL context
     window = glfwCreateWindow(width, height, window_name, NULL, NULL);
     if (window == NULL)
@@ -25,14 +31,21 @@ GLRenderer::GLRenderer(const char* window_name, int width, int height) {
     }
 
     double prevTime = glfwGetTime();
+    (void) prevTime;
+    
+    glEnable(GL_PROGRAM_POINT_SIZE);
     
     glEnable(GL_DEPTH_TEST);
+    // glDepthMask(GL_FALSE);
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void CompileErrors(unsigned int shader, const char* type) {
   GLint has_compiled;
   char info_log[1024];
-  if (type != "PROGRAM") {
+  if (strcmp(type, "PROGRAM") != 0) {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &has_compiled);
     if (has_compiled == GL_FALSE) {
       glGetShaderInfoLog(shader, 1024, NULL, info_log);
@@ -48,7 +61,7 @@ void CompileErrors(unsigned int shader, const char* type) {
   }
 }
 
-void GLRenderer::InitShaderProgram(const char* vertex_shader, const char* fragment_shader) {
+void GLRenderer::InitMeshShaderProgram(const char* vertex_shader, const char* fragment_shader) {
   // Set up vertex shader
   std::string vertex_code = GetFileContents(vertex_shader);
   const char* vertex_source = vertex_code.c_str();
@@ -66,146 +79,103 @@ void GLRenderer::InitShaderProgram(const char* vertex_shader, const char* fragme
   CompileErrors(fragmentShader, "FRAGMENT");
   
   // Link shaders into a program
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
+  meshShaderProgram = glCreateProgram();
+  glAttachShader(meshShaderProgram, vertexShader);
+  glAttachShader(meshShaderProgram, fragmentShader);
+  glLinkProgram(meshShaderProgram);
   
   // Delete shaders (we no longer need them after linking)
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 }
 
-void GLRenderer::InitBuffers(std::vector<float>& vertices, std::vector<GLuint>& indices) {
-  num_indices = indices.size();
-  
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
-  
-  glBindVertexArray(VAO);
-  
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-  
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
-  
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
-  
-  glBindVertexArray(0);
+void GLRenderer::UseMeshShaderProgram() {
+  glUseProgram(meshShaderProgram);
+}
+
+void GLRenderer::InitMesh(std::vector<float>& vertices, std::vector<GLuint>& indices) {
+  meshes.push_back(Mesh(vertices, indices));
+}
+
+void GLRenderer::UpdateMeshBuffer(int i, std::vector<float>& vertices) {
+  meshes[i].UpdateArrayBuffer(vertices);
 }
 
 void GLRenderer::Clear() {
-  // Render here, clear the buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GLRenderer::Render(int FOVdeg) {
-    // Use the shader program
-    glUseProgram(shaderProgram);
-    
-    glUniform1f(glGetUniformLocation(shaderProgram, "time"), glfwGetTime());
-    glUniform1f(glGetUniformLocation(shaderProgram, "spin_time"), glfwGetTime());
-    float new_col = (sin((glfwGetTime()) / 1.0f) + 1) / 2.0f;
-    float new_col2 = (sin((glfwGetTime()+2) / 1.0f) + 1) / 2.0f;
-    float new_col3 = (sin((glfwGetTime()+4) / 1.0f) + 1) / 2.0f;
-    glUniform4fv(glGetUniformLocation(shaderProgram, "colour_1"), 1, glm::value_ptr(glm::vec4(new_col,0.0,0.0,1.0)));
-    glUniform4fv(glGetUniformLocation(shaderProgram, "colour_2"), 1, glm::value_ptr(glm::vec4(0.0, new_col2, 0.0, 1.0)));
-    glUniform4fv(glGetUniformLocation(shaderProgram, "colour_3"), 1, glm::value_ptr(glm::vec4(0.0, 0.0, new_col3, 1.0)));
-    glUniform1f(glGetUniformLocation(shaderProgram, "contrast"), 0.5);
-    glUniform1f(glGetUniformLocation(shaderProgram, "spin_amount"), 0.5);
-    glUniform1f(glGetUniformLocation(shaderProgram, "PIXEL_SIZE_FAC"), 700);
-    
-    // camera.Inputs(window);
-    camera.updateMatrix(FOVdeg, 0.1f, 100.0f);
-    
-    camera.Matrix(shaderProgram, "camMatrix");
-
-    // Bind the VAO
-    glBindVertexArray(VAO);
-
-    // Draw the triangle
-    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, 0);
-
-    // Unbind the VAO
-    glBindVertexArray(0);
+void GLRenderer::DrawMesh(int i, Rcpp::NumericVector p, Rcpp::NumericVector q) {
+  meshes[i].Draw(meshShaderProgram, p, q);
 }
 
 void GLRenderer::Update() {
-    // Swap front and back buffers
-    glfwSwapBuffers(window);
-
-    // Poll for and process events
-    glfwPollEvents();
+  glfwSwapBuffers(window);
+  glfwPollEvents();
 }
 
 std::vector<int> GLRenderer::GetInputs() {
-    std::vector<int> output;
-    for (int i = 32; i <= GLFW_KEY_LAST; i++) {
-        if (glfwGetKey(window, i)) {
-            output.push_back(i);
-        }
+  std::vector<int> output;
+  for (int i = GLFW_KEY_SPACE; i <= GLFW_KEY_LAST; i++) {
+    if (glfwGetKey(window, i)) {
+      output.push_back(i);
     }
-    return output;
+  }
+  return output;
 }
 
 void GLRenderer::FramerateLimit(int framerate) {
-    double currTime = glfwGetTime();
-    while (currTime - prevTime <= 1.0 / framerate) {
-        currTime = glfwGetTime();
-    }
-    prevTime = currTime;
+  double currTime = glfwGetTime();
+  while (currTime - prevTime <= 1.0 / framerate) {
+    currTime = glfwGetTime();
+  }
+  prevTime = currTime;
 }
 
 void GLRenderer::Delete() {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
-
-    // Terminate GLFW
-    glfwTerminate();
+  for (Mesh mesh : meshes) mesh.Delete();
+  glDeleteProgram(meshShaderProgram);
+  
+  // Terminate GLFW
+  glfwTerminate();
 }
 
 std::string GLRenderer::GetFileContents(const char* filename) {
-    std::ifstream in(filename, std::ios::binary);
-    if (in)
-    {
-        std::string contents;
-        in.seekg(0, std::ios::end);
-        contents.resize(in.tellg());
-        in.seekg(0, std::ios::beg);
-        in.read(&contents[0], contents.size());
-        in.close();
+  std::ifstream in(filename, std::ios::binary);
+  if (in)
+  {
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg()); 
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
+    in.close();
 
-        return contents;
-    }
-    Rcpp::Rcout << "ERROR: NO FILE FOUND: " << filename << std::endl;
-    return "";
+    return contents;
+  }
+  Rcpp::Rcout << "ERROR: NO FILE FOUND: " << filename << std::endl;
+  return "";
 }
 
-void GLRenderer::SetCameraPosition(float x, float y, float z) {
-  camera.Position = glm::vec3(x, y, z);
+void GLRenderer::SetLights(std::vector<float> lightdata) {
+  int data_size = lightdata.size();
+  int nlights = data_size / 9;
+  glUniform1fv(glGetUniformLocation(meshShaderProgram, "lightArray"), data_size, lightdata.data());
+  glUniform1i(glGetUniformLocation(meshShaderProgram, "nlights"), nlights);
 }
 
-void GLRenderer::SetCameraOrientation(float x, float y, float z) {
-  camera.Orientation = glm::vec3(x, y, z);
+void GLRenderer::SetCamera(Rcpp::NumericVector p, Rcpp::NumericVector q, float FOVdeg, float aspect) {
+  glUniform3f(glGetUniformLocation(meshShaderProgram, "camPos"), p[0], p[1], p[2]);
+  glUniform4f(glGetUniformLocation(meshShaderProgram, "camQuat"), q[1], q[2], q[3], q[0]);
+  glm::mat4 projection = glm::perspective(glm::radians(FOVdeg), aspect, 0.1f, 100.0f);
+  glUniformMatrix4fv(glGetUniformLocation(meshShaderProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(projection));
 }
 
-void GLRenderer::SetCameraUp(float x, float y, float z) {
-  camera.Up = glm::vec3(x, y, z);
+bool GLRenderer::WindowShouldClose() {
+  return glfwWindowShouldClose(window);
 }
 
-void GLRenderer::SetCameraResolution(float width, float height){
-  camera.width = width;
-  camera.height = height;
-}
-
-void GLRenderer::saveImage(const char* filepath, int width, int height) {
+void GLRenderer::SaveImage(const char* filepath, int width, int height) {
   GLsizei nrChannels = 3;
   GLsizei stride = nrChannels * width;
   stride += (stride % 4) ? (4 - stride % 4) : 0;

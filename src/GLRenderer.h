@@ -2,33 +2,29 @@
 #define RENDERER_ENGINE
 
 // #define GLFW_DLL
-
-#include <glad/glad.h>
+#include "Mesh.h"
 #include <GLFW/glfw3.h>
-#include <vector>
-#include <string>
-#include <fstream>
-
-#include "Camera.h"
-#include "Rcpp.h"
 
 class GLRenderer {
 public:
 	// Call glfw and glad. Create window.
 	GLRenderer(const char* window_name, int width, int height);
 
-	// Initialise ShaderProgram, taking path to vertex and fragment source file.
-	void InitShaderProgram(const char* vertex_shader, const char* fragment_shader);
-
-	// Initialise VAO, VBO and EBO using list of vertices and indices.
-	void InitBuffers(std::vector<float>& vertices, std::vector<GLuint>& indices);
+	// Initialise meshShaderProgram, taking path to vertex and fragment source file.
+	void InitMeshShaderProgram(const char* vertex_shader, const char* fragment_shader);
+	
+	void InitMesh(std::vector<float>& vertices, std::vector<GLuint>& indices);
+	
+	void UpdateMeshBuffer(int i, std::vector<float>& vertices);
 
 	// Clear back buffer.
 	// Use at start of main loop before any render calls.
 	void Clear();
-
+  
+  void UseMeshShaderProgram();
+  
 	// Render currently stored data in VAO/VBO/EBO.
-	void Render(int FOVdeg);
+	void DrawMesh(int i, Rcpp::NumericVector p, Rcpp::NumericVector q);
 
 	// Swap back and front buffers and poll for events.
 	void Update();
@@ -42,26 +38,21 @@ public:
 	// Clear all buffers and destroy window.
 	void Delete();
 	
-	void SetCameraOrientation(float x, float y, float z);
-	void SetCameraPosition(float x, float y, float z);
-	void SetCameraUp(float x, float y, float z);
-	void SetCameraResolution(float width, float height);
+	void SetLights(std::vector<float> lightdata);
+	void SetCamera(Rcpp::NumericVector p, Rcpp::NumericVector q, float FOVdeg, float aspect);
+	void SaveImage(const char* filepath, int width, int height);
 	
-	void saveImage(const char* filepath, int width, int height);
+	bool WindowShouldClose();
 
 	GLFWwindow* window;	// Pointer to stored window.
-	GLuint shaderProgram;
-	GLuint VBO, VAO, EBO;
-	
-	Camera camera = Camera(1280, 720, glm::vec3(0.0f, 0.0f, 0.0f));
+	GLuint meshShaderProgram;
 	
 private:
 	// Gets the contents of a file at given path.
 	std::string GetFileContents(const char* filename);
-
 	double prevTime;
-	
 	int num_indices;
+	std::vector<Mesh> meshes;
 };
 
 #endif

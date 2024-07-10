@@ -17,7 +17,7 @@
 #' 
 #' If `anyNA(value)`, the updated scene element has no orientation.
 #' 
-#' @inheritParams behaviours
+#' @inheritParams behaviors
 #' @param value numeric replacement vector. 
 #' Quaternion or an R object containing `NA`.
 #' @returns
@@ -29,14 +29,14 @@
 #' @seealso [point()], [rotate()], [direction()], [looked_at()], [skewer()].
 #' @export
 
-orientation <- function(x){
+orientation <- function(x) {
   x$orientation
 }
 
 #' @rdname orientation
 #' @export
-`orientation<-` <- function(x, value){
-  if(anyNA(value)){
+`orientation<-` <- function(x, value) {
+  if(anyNA(value)) {
     x$orientation <- NA_real_
     return(x)
   }

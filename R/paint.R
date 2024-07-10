@@ -1,20 +1,14 @@
-#' The Colour of a Scene Element
+#' The Color of a Scene Element
 #' 
-#' Change the colour of a light or scene object.
+#' Change the color of a light or scene object.
 #' 
 #' @details
-#' Paints all polygons of a scene object a specified colour, or alternatively 
-#' sets the colour of a light. Transparency is ignored for lights, and transparent 
-#' scene objects render much slower than opaque objects.
+#' Paints all polygons of a scene object a specified color, or alternatively 
+#' sets the color of a light. Transparency is ignored for lights.
 #' 
-#' Additionally, two colours can be given when painting a scene object, upon 
-#' which a gradient between the two colours is applied to the object. 
-#' This gradient is a linear interpolation in the RGBA colourspace. `scale`, 
-#' a numeric vector with an element for each face, specifies how far along this 
-#' gradient each face is, and is automatically constrained to lie from 0 to 1. 
-#' 
-#' By default, `scale` is the degree to which each polygon faces the horizontal axis 
-#' orthogonal to the direction the scene object faces.
+#' If more than one color is supplied to `colors` when painting a scene object, 
+#' a [grDevices::colorRamp()] is created and called on the `scale`, 
+#' a numeric vector with an element for each polygon.
 #' 
 #' By default, [light()] creates a white light, and [read_obj()] and [st_as_obj()] 
 #' create white scene objects.
@@ -23,48 +17,48 @@
 #' 
 #' @param x scene object (object of class "scenesetr_obj") or light (object of 
 #' class "scenesetr_light") or scene (object of class "scenesetr_scene")
-#' @inheritParams light
-#' @param scale numeric vector. How far along the gradient is each face?
-#' @returns Scene object or light or scene with updated colour.
+#' @inheritParams grDevices::colorRamp
+#' @param scale numeric vector. How far along the color gradient is each face?
+#' @returns Scene object or light or scene with updated color.
 #' @export
 
-paint <- function(x, color, scale = x$normals[1, ]) UseMethod("paint")
+paint <- function(x, colors, scale = 0, ...) UseMethod("paint")
 
 #' @export
-paint.scenesetr_obj <- function(x, color, scale = x$normals[1, x$normal_indices[1, ]]){
-  one_color <- length(color) == 1
-  color <- grDevices::col2rgb(color, alpha = TRUE)
-  if(!one_color){
-    scale <- restrict(scale)
-    scale[is.na(scale)] <- 0.5
-    color <- color[, 1] + (color[, 2] - color[, 1]) %o% scale
-  }
-  x$color <- color
+paint.scenesetr_obj <- function(x, colors, scale = 0, ...) {
+  x$color <- make_colors(colors, scale = 0, ...)
   x
 }
 
-restrict <- function(x) (x - min(x)) / (max(x) - min(x))
+make_colors <- function(colors, scale = 0, ...) {
+  if(is.null(scale) || length(colors) == 1) scale <- 0
+  ramp <- grDevices::colorRamp(colors, ...)
+  stopifnot(
+    "scale must be within the interval [0,1]" = min(scale) >= 0 && max(scale) <= 1
+  )
+  t(ramp(scale))
+}
 
 #' @export
-paint.scenesetr_light <- function(x, color, scale = x$normals[1, x$normal_indices[1, ]]){
-  x$color <- format_col(color)
+paint.scenesetr_light <- function(x, colors, scale, ...) {
+  x$color <- format_color(colors)
   x
 }
 
 #' @export
-paint.scenesetr_scene <- function(x, color, scale = x$normals[1, x$normal_indices[1, ]]){
-  x <- lapply(x, paint, color)
+paint.scenesetr_scene <- function(x, colors, scale, ...) {
+  x <- lapply(x, paint, colors, scale, ...)
   class(x) <- "scenesetr_scene"
   x
 }
 
 #' @export
-paint.scenesetr_camera <- function(x, color, scale = x$normals[1, ]){
+paint.scenesetr_camera <- function(x, colors, scale, ...) {
   warning("camera returned unpainted")
   x
 }
 
-format_col <- function(col){
-  stopifnot("col must be one colour" = length(col) == 1)
-  drop(grDevices::col2rgb(col, alpha = FALSE)) / 255
+format_color <- function(col) {
+  stopifnot("a light can only take one color" = length(col) == 1)
+  drop(grDevices::col2rgb(col, alpha = FALSE))
 }

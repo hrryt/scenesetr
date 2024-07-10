@@ -22,7 +22,7 @@ be seen from the viewpoint of a camera when \code{\link[=record]{record()}} is c
 }
 \details{
 There are four categories of light. Ambient light, directional light, point
-light and spotlight. Default arguments return a white ambient light with no behaviour.
+light and spotlight. Default arguments return a white ambient light with no behavior.
 
 If a light is unplaced and has no direction, it is an ambient light, which
 exerts equal shading on every polygon.
@@ -36,7 +36,7 @@ as an omni-directional light from a point source at its location.
 If a light has both a location and a direction, it is a spotlight, which acts
 as a point light, but only acting on a cone in the direction specified.
 
-\code{direction} will be normalised to a 3-D vector of unit length.
+\code{direction} will be normalized to a 3-D vector of unit length.
 }
 \seealso{
 \code{\link[=camera]{camera()}}, \code{\link[=scene]{scene()}}.
