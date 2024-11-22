@@ -2,5 +2,7 @@ PKG_CXXFLAGS = -I../inst/glfw/include
 PKG_CFLAGS = -I../inst/glfw/include
 PKG_LIBS = -L../inst/glfw/lib-mingw-w64 -lglfw3
 ifeq "$(OS)" "Windows_NT"
-PKG_LIBS += -lgdi32
+PKG_LIBS += -lopengl32 -lgdi32 -luser32 -lkernel32 -lws2_32
+else
+PKG_LIBS += -lGL
 endif
