@@ -38,4 +38,5 @@ behaves.scenesetr_scene <- function(x, behavior) {
 }
 
 #' @rdname behaves
+#' @export
 `%behaves%` <- behaves

@@ -128,7 +128,7 @@ swarm <- function(element, scene, ...) {
   initial(element$velocity) <- c(0,0,0)
   
   # Get the positions and velocities of all the boids in the swarm
-  boids <- scene[behaves(scene, swarm)]
+  boids <- scene[scene %behaves% swarm]
   positions <- sapply(boids, position)
   velocities <- sapply(boids, function(boid) boid$velocity %||% direction(boid))
   is_close <- sapply(boids, in_range, element, bounding_size / 3)
