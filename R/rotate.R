@@ -14,7 +14,7 @@
 #' 
 #' @inheritParams behaves
 #' @param axis numeric vector or character string. 
-#' 3-D (x,y,z) coordinates or one of `c(up, down, left, right, clockwise)`.
+#' 3-D (x,y,z) coordinates or one of `c("up", "down", "left", "right", "clockwise")`.
 #' @param angle numeric value in degrees
 #' @returns Scene element or scene with updated rotation.
 #' @seealso [point()], [direction()], [orientation()], [looked_at()].

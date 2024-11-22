@@ -12,7 +12,7 @@ or light (object of class "scenesetr_light") or scene object (object of class
 "scenesetr_obj") or scene (object of class "scenesetr_scene").}
 
 \item{axis}{numeric vector or character string.
-3-D (x,y,z) coordinates or one of \code{c(up, down, left, right, clockwise)}.}
+3-D (x,y,z) coordinates or one of \code{c("up", "down", "left", "right", "clockwise")}.}
 
 \item{angle}{numeric value in degrees}
 }

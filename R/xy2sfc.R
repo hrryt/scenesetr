@@ -1,4 +1,5 @@
-xy2sfc <- function(x) {
+xy2sfc <- function(x, sfc) {
+  calc = missing(sfc)
   d = stars::st_dimensions(x)
   olddim = dim(x)
   r = attr(d, "raster")
@@ -10,7 +11,7 @@ xy2sfc <- function(x) {
   xy_pos = match(dxy, names(d))
   stopifnot(all(xy_pos == 1:2))
   keep = as.vector(!is.na(x$relief))
-  sfc = sf::st_as_sfc(x, as_points = FALSE, which = which(keep))
+  if(calc) sfc = sf::st_as_sfc(x, as_points = FALSE, which = which(keep))
   d[[dxy[1]]] = structure(list(
     from = 1, to = length(sfc), offset = NA, delta = NA,
     refsys = sf::st_crs(sfc), point = TRUE, values = sfc
@@ -29,5 +30,6 @@ xy2sfc <- function(x) {
   args[["drop"]] = FALSE
   for (i in seq_along(x)) x[[i]] = structure(eval(rlang::expr(x[[i]][!!!args])), 
                                              levels = attr(x[[i]], "levels"))
+  if(calc) attr(x, "sfc") <- sfc
   structure(x, dimensions = d, class = "stars")
 }

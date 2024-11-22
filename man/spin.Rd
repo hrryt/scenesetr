@@ -8,7 +8,7 @@ spin(axis, angle, quit_after_cycle = FALSE)
 }
 \arguments{
 \item{axis}{numeric vector or character string.
-3-D (x,y,z) coordinates or one of \code{c(up, down, left, right, clockwise)}.}
+3-D (x,y,z) coordinates or one of \code{c("up", "down", "left", "right", "clockwise")}.}
 
 \item{angle}{numeric value in degrees}
 

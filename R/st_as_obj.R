@@ -46,6 +46,7 @@
 #' @param use_data_table logical; should `data.table` be used if installed?
 #' @param quit_after_cycle logical; if animated, should [quit_device()] be 
 #' called after completion?
+#' @param progress logical; print verbose output if animated?
 #' @param ... additional arguments to pass to [paint()].
 #' @returns Scene object (object of class "scenesetr_obj").
 #' @seealso [read_obj()], [scene()], [record()].
@@ -53,14 +54,14 @@
 st_as_obj <- function(
     x, colors = "white", globe = TRUE, radius = 10,
     max_color_value = 1, use_data_table = TRUE,
-    quit_after_cycle = FALSE, ...)
+    quit_after_cycle = FALSE, progress = TRUE, ...)
   UseMethod("st_as_obj")
 
 #' @export
 st_as_obj.stars <- function(
     x, colors = "white", globe = TRUE, radius = 10,
     max_color_value = 1, use_data_table = TRUE, 
-    quit_after_cycle, ...) {
+    quit_after_cycle = FALSE, progress = TRUE, ...) {
   
   rlang::check_installed(
     c("stars", "sf"), reason = "to manipulate stars and sf objects"
@@ -78,15 +79,16 @@ st_as_obj.stars <- function(
     )
   }
   
-  if(has_time) {
+  x1stars <- if(has_time) {
     indices <- rep(list(rlang::missing_arg()), length(dim(x)))
     ix <- which(dn == "time")[1]
     indices[[ix + 1]] <- 1
     indices[["drop"]] <- TRUE
-    x1 <- eval(rlang::expr(x[!!!indices]))
-  } else x1 <- x
+    eval(rlang::expr(x[!!!indices]))
+  } else x
   
-  x1 <- xy2sfc(x1)
+  x1 <- xy2sfc(x1stars)
+  sfc <- attr(x1, "sfc")
   x1 <- sf::st_as_sf(x1)
   
   if(globe && sf::st_crs(x1) != sf::st_crs("EPSG:4326"))
@@ -98,22 +100,26 @@ st_as_obj.stars <- function(
     fallback_as_obj(x1, colors, globe, radius, max_color_value, ...)
   
   if(has_time) {
-    animation_colors <- lapply(seq_len(dim(x)[[ix]]), function(i) {
+    len <- dim(x)[[ix]]
+    animation_colors <- lapply(seq_len(len), function(i) {
+      if(progress) cat(sprintf(
+        "\r\033[0;35mCapturing time %i of %i (%.0f%%)...\033[0m",
+        i, len, i/len*100
+      ))
       indices[[ix + 1]] <- i
       xi <- eval(rlang::expr(x[!!!indices]))
-      xi <- xy2sfc(xi)
+      xi <- xy2sfc(xi, sfc)
       xi <- sf::st_as_sf(xi)
       color <- st_make_colors(colors, xi, max_color_value, ...)
       cbind(color, color)
     })
+    if(progress) cat("\n")
     n_frames <- length(animation_colors)
-    
     animated <- function(element, frame, ...) {
       if(quit_after_cycle && frame == n_frames + 1) return(quit_device("Cycle completed"))
       element$color <- animation_colors[[(frame - 1) %% n_frames + 1]]
       element
     }
-    
     object$update_buffer <- TRUE
     object <- behave(object, animated)
   }

@@ -37,81 +37,86 @@ devtools::install_github("hrryt/scenesetr")
 ## Usage
 
 ```r
-# install.packages(c("magrittr", "gifski"))
-library(magrittr)
+# install.packages("gifski")
 library(scenesetr)
 ```
 
 ### Visualize and animate raster data
 
+Set up `stars` raster objects:
+
 ```r
 # install.packages(c("sf", "stars", "data.table"))
 library(stars)
 library(sf)
-library(magrittr)
 
 # Load in Greenland relief data as stars rasters
-bed_mosaic <- greenland_bed * 0.15
-ice_mosaic <- greenland_ice * 0.15
-ice_mosaic <- st_warp(ice_mosaic, bed_mosaic)
+bed_raster <- greenland_bed * 0.15
+ice_raster <- greenland_ice * 0.15
+ice_raster <- st_warp(ice_raster, bed_raster)
 
 # RGB raster of NASA's "blue marble", a true-color image of the Earth
-# https://visibleearth.nasa.gov/images/57752/blue-marble-land-surface-shallow-water-and-shaded-topography
-# https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57752/land_shallow_topo_8192.tif
-blue_marble <- read_stars("land_shallow_topo_8192.tif") %>%
+# Information: https://visibleearth.nasa.gov/images/57752/blue-marble-land-surface-shallow-water-and-shaded-topography
+# Download: https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57752/land_shallow_topo_8192.tif
+blue_marble <- read_stars("land_shallow_topo_8192.tif") |>
   st_downsample(3)
 x_dim <- (((st_get_dimension_values(blue_marble, "x")-.5) / nrow(blue_marble))-.5) * 360
 y_dim <- (((st_get_dimension_values(blue_marble, "y")+.5) / ncol(blue_marble))-.5) * 180
-blue_marble <- blue_marble %>%
-  st_set_dimensions("x", x_dim) %>%
-  st_set_dimensions("y", y_dim) %>%
-  st_set_crs("WGS84") %>%
-  st_warp(bed_mosaic) %>%
-  split("band") %>%
+blue_marble <- blue_marble |>
+  st_set_dimensions("x", x_dim) |>
+  st_set_dimensions("y", y_dim) |>
+  st_set_crs("WGS84") |>
+  st_warp(bed_raster) |>
+  split("band") |>
   set_names(c("red", "green", "blue"))
 
-bed_mosaic <- c(bed_mosaic, blue_marble / 255)
+bed_raster <- c(bed_raster, blue_marble)
 
 # Add a lake under the Greenland ice cap and lighten the ocean floor
 for(colour in names(blue_marble)){
-  bed_mosaic[[colour]][bed_mosaic$relief < 0 & !is.na(ice_mosaic$relief)] <- bed_mosaic[[colour]][[1,1]]
-  bed_mosaic[[colour]][bed_mosaic$relief < 0 & is.na(ice_mosaic$relief)] <- 1-(0.8*(1-bed_mosaic[[colour]][[1,1]]))
+  bed_raster[[colour]][bed_raster$relief < 0 & !is.na(ice_raster$relief)] <- bed_raster[[colour]][[1,1]]
+  bed_raster[[colour]][bed_raster$relief < 0 & is.na(ice_raster$relief)] <- 255-(0.8*(255-bed_raster[[colour]][[1,1]]))
 }
 
 # NOAA time series data of Arctic sea ice concentration in 2023
-# https://polarwatch.noaa.gov/erddap/griddap/nsidcG10016v2nh1day.nc?cdr_seaice_conc[(2023-01-01T00:00:00Z):1:(2024-01-01T00:00:00Z)][(5837500.0):1:(-5337500)][(-383750.0):1:(3737500.0)]
-sea_mosaic <- read_ncdf("sea_ice.nc", var = "cdr_seaice_conc")
-st_crs(sea_mosaic) <- "EPSG:3411"
-names(sea_mosaic) <- "paint"
-units(sea_mosaic$paint) <- NULL
-sea_mosaic <- st_warp(sea_mosaic, bed_mosaic)
+# Information: https://polarwatch.noaa.gov/erddap/griddap/nsidcG02202v4nh1day.graph
+# Download: https://polarwatch.noaa.gov/erddap/griddap/nsidcG02202v4nh1day.nc?cdr_seaice_conc[(2023-01-01T00:00:00Z):1:(2024-01-01T00:00:00Z)][(5837500.0):1:(-5337500.0)][(-3837500.0):1:(3737500.0)]
+sea_raster <- read_ncdf("nsidcG02202v4nh1day.nc", var = "cdr_seaice_conc")
+st_crs(sea_raster) <- "EPSG:3411"
+names(sea_raster) <- "paint"
+units(sea_raster$paint) <- NULL
+sea_raster <- st_warp(sea_raster, bed_raster)
 sea_colors <- rev(paste0(grDevices::blues9, as.hexmode(255-(0:8)*12)))
+```
 
-# The sea_mosaic stars raster has a time dimension so will be animated
-sea_obj <- st_as_obj(sea_mosaic, colors = sea_colors, quit_after_cycle = TRUE, alpha = TRUE)
-bed_obj <- st_as_obj(bed_mosaic, max_color_value = 255)
-ice_obj <- st_as_obj(ice_mosaic, colors = "#ffffff99", alpha = TRUE)
+Use `scenesetr` to create a 3-D scene and record a GIF:
 
-greenland_objs <- scene(bed_obj, ice_obj, sea_obj) %>%
-  place(c(0,0,13)) %>%
-  rotate("up", 75) %>%
+```r
+# The sea_raster stars raster has a time dimension so will be animated
+sea_obj <- st_as_obj(sea_raster, colors = sea_colors, quit_after_cycle = TRUE, alpha = TRUE)
+bed_obj <- st_as_obj(bed_raster, max_color_value = 255)
+ice_obj <- st_as_obj(ice_raster, colors = "#ffffff99", alpha = TRUE)
+
+greenland_objs <- scene(bed_obj, ice_obj, sea_obj) |>
+  place(c(0,0,13)) |>
+  rotate("up", 75) |>
   rotate("right", 25)
 
 greenland_scene <- c(greenland_objs, scene(
-  light() %>% 
+  light() |> 
     point(c(1,0,0)),
-  light() %>%
-    point(c(0,0,1)) %>%
-    rotate("up", 45) %>%
-    rotate("right", 90) %>%
+  light() |>
+    point(c(0,0,1)) |>
+    rotate("up", 45) |>
+    rotate("right", 90) |>
     paint("lightyellow"),
-  camera() %>%
+  camera() |>
     rotate("right", 30)
 ))
 
 record_gif(greenland_scene, width = 960, height = 540)
 ```
-![Timelapse of sea ice cover with bed topography under the Greenland ice cap](man/figures/README-greenland.gif)
+![Timelapse of Arctic sea ice concentration over 2023, with bed topography under the Greenland ice cap](man/figures/README-greenland.gif)
 
 ### Simulate complex behavior
 
@@ -127,7 +132,7 @@ swarm <- function(element, scene, ...) {
   initial(element$velocity) <- c(0,0,0)
   
   # Get the positions and velocities of all the boids in the swarm
-  boids <- scene[scene %behaves% swarm]
+  boids <- scene[behaves(scene, swarm)]
   positions <- sapply(boids, position)
   velocities <- sapply(boids, function(boid) boid$velocity %||% direction(boid))
   is_close <- sapply(boids, in_range, element, bounding_size / 3)
@@ -135,9 +140,9 @@ swarm <- function(element, scene, ...) {
   
   # Response to other boids
   velocity <- element$velocity + 0.005 * (
-    (rowMeans(positions) - position(element)) +       # cohesion
-    (position(element) - rowMeans(close_positions)) + # separation
-    2*(rowMeans(velocities) - element$velocity)       # alignment
+    rowMeans(positions) - position(element) +       # cohesion
+    position(element) - rowMeans(close_positions) + # separation
+    2*(rowMeans(velocities) - element$velocity)     # alignment
   )
   
   # Clamp speed between 1.0 and 0.1
@@ -158,23 +163,23 @@ swarm <- function(element, scene, ...) {
 }
 
 # All boids will have these properties
-boid <- pyramid_obj(boid_size) %>%
-  paint("lightblue") %>%
+boid <- pyramid_obj(boid_size) |>
+  paint("lightblue") |>
   behave(swarm)
 
 set.seed(1)
 scene <- scene(
-  camera() %>%
-    place(bounding_size * c(0.02,0.7,0.02)) %>%
-    point(c(1,0,1)) %>%
-    rotate("right", 5) %>%
+  camera() |>
+    place(bounding_size * c(0.02,0.7,0.02)) |>
+    point(c(1,0,1)) |>
+    rotate("right", 5) |>
     rotate("down", 15),
-  light() %>%
+  light() |>
     point(c(1,2,3)),
-  light() %>%
+  light() |>
     paint("lightyellow"),
-  cube_obj(bounding_size, inverse = TRUE) %>%
-    place(c(0,0,0)) %>%
+  cube_obj(bounding_size, inverse = TRUE) |>
+    place(c(0,0,0)) |>
     paint("darkolivegreen"),
   list = replicate(n_boids, list(
     # Randomly position boids within bounding box

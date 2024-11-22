@@ -12,6 +12,7 @@ st_as_obj(
   max_color_value = 1,
   use_data_table = TRUE,
   quit_after_cycle = FALSE,
+  progress = TRUE,
   ...
 )
 }
@@ -32,6 +33,8 @@ surface based on the \code{\link[sf:st_crs]{sf::st_crs()}} of \code{x}?}
 
 \item{quit_after_cycle}{logical; if animated, should \code{\link[=quit_device]{quit_device()}} be
 called after completion?}
+
+\item{progress}{logical; print verbose output if animated?}
 
 \item{...}{additional arguments to pass to \code{\link[=paint]{paint()}}.}
 }
