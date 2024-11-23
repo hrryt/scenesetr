@@ -1,7 +1,9 @@
 PKG_CXXFLAGS = -I../inst/glfw/include
 PKG_CFLAGS = -I../inst/glfw/include
-ifeq "$(OS)" "Windows_NT"
-PKG_LIBS = -L../inst/glfw/lib-mingw-w64 -lglfw3 -lopengl32 -lgdi32 -luser32 -lkernel32 -lws2_32
-else
 PKG_LIBS = -lGL -lglfw
+ifeq ($(OS), Windows_NT)
+PKG_LIBS = -L../inst/glfw/lib-mingw-w64 -lglfw3 -lopengl32 -lgdi32 -luser32 -lkernel32 -lws2_32
+endif
+ifeq ($(OSTYPE), darwin*)
+PKG_LIBS = -lGLEW -framework OpenGL -lm -ldl
 endif
