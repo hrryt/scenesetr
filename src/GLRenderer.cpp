@@ -89,16 +89,56 @@ void GLRenderer::InitMeshShaderProgram(const char* vertex_shader, const char* fr
   glDeleteShader(fragmentShader);
 }
 
+void GLRenderer::InitCloudShaderProgram(const char* vertex_shader, const char* fragment_shader) {
+  // Set up vertex shader
+  std::string vertex_code = GetFileContents(vertex_shader);
+  const char* vertex_source = vertex_code.c_str();
+  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertexShader, 1, &vertex_source, NULL);
+  glCompileShader(vertexShader);
+  CompileErrors(vertexShader, "VERTEX");
+  
+  // Set up fragment shader
+  std::string fragment_code = GetFileContents(fragment_shader);
+  const char* fragment_source = fragment_code.c_str();
+  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragmentShader, 1, &fragment_source, NULL);
+  glCompileShader(fragmentShader);
+  CompileErrors(fragmentShader, "FRAGMENT");
+  
+  // Link shaders into a program
+  cloudShaderProgram = glCreateProgram();
+  glAttachShader(cloudShaderProgram, vertexShader);
+  glAttachShader(cloudShaderProgram, fragmentShader);
+  glLinkProgram(cloudShaderProgram);
+  
+  // Delete shaders (we no longer need them after linking)
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+}
+
 void GLRenderer::UseMeshShaderProgram() {
   glUseProgram(meshShaderProgram);
+}
+
+void GLRenderer::UseCloudShaderProgram() {
+  glUseProgram(cloudShaderProgram);
 }
 
 void GLRenderer::InitMesh(std::vector<float>& vertices, std::vector<GLuint>& indices) {
   meshes.push_back(Mesh(vertices, indices));
 }
 
+void GLRenderer::InitCloud(std::vector<float>& vertices) {
+  clouds.push_back(Cloud(vertices));
+}
+
 void GLRenderer::UpdateMeshBuffer(int i, std::vector<float>& vertices) {
   meshes[i].UpdateArrayBuffer(vertices);
+}
+
+void GLRenderer::UpdateCloudBuffer(int i, std::vector<float>& vertices) {
+  clouds[i].UpdateArrayBuffer(vertices);
 }
 
 void GLRenderer::Clear() {
@@ -107,6 +147,10 @@ void GLRenderer::Clear() {
 
 void GLRenderer::DrawMesh(int i, Rcpp::NumericVector p, Rcpp::NumericVector q) {
   meshes[i].Draw(meshShaderProgram, p, q);
+}
+
+void GLRenderer::DrawCloud(int i, Rcpp::NumericVector p, Rcpp::NumericVector q) {
+  clouds[i].Draw(cloudShaderProgram, p, q);
 }
 
 void GLRenderer::Update() {
@@ -134,7 +178,9 @@ void GLRenderer::FramerateLimit(int framerate) {
 
 void GLRenderer::Delete() {
   for (Mesh mesh : meshes) mesh.Delete();
+  for (Cloud cloud : clouds) cloud.Delete();
   glDeleteProgram(meshShaderProgram);
+  glDeleteProgram(cloudShaderProgram);
   
   // Terminate GLFW
   glfwTerminate();
